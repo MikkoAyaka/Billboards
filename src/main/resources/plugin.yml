@@ -4,12 +4,14 @@ api-version: '1.13'
 version: '${version}'
 author: blablubbabc
 description: Rent-able signs.
-depend: [Vault]
+depend:
+  - Vault
+  - ProtocolLib
 commands:
-    billboard:
-      description: Used to add a sign.
-      usage: /<command> [<price> <duration>] [creator]
-      aliases: [billboards, adsign]
+  billboard:
+    description: Used to add a sign.
+    usage: /<command> [<price> <duration>] [creator]
+    aliases: [billboards, adsign]
 permissions:
   billboards.rent:
     description: Can rent and edit own billboard signs.

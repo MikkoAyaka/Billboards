@@ -49,7 +49,8 @@ Things that have to be added in the future in order for the player signs to prop
 | bypass-sign-change-blocking | true          | Whether we should bypass other plugins which attempt to prevent sign editing (eg. protection plugins, but this also applies to anti swearing plugins etc.). |
 
 All messages are configurable and translatable.
-This plugin requires [Vault](https://github.com/MilkBowl/Vault) for the economy interaction.
+This plugin requires [ProtocolLib](https://github.com/dmulloy2/ProtocolLib/), [Vault](https://github.com/MilkBowl/Vault) for the economy interaction.
+
 
 ## Links
 

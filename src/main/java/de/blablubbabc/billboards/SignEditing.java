@@ -1,35 +1,63 @@
 package de.blablubbabc.billboards;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.BlockPosition;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
-import de.blablubbabc.billboards.util.SoftBlockLocation;
-import de.blablubbabc.billboards.util.Utils;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignEditing implements Listener {
 
 	private final BillboardsPlugin plugin;
 	// player name -> editing information
 	private final Map<String, SignEdit> editing = new HashMap<>();
-
+	private final ProtocolManager protocolManager;
 	SignEditing(BillboardsPlugin plugin) {
 		this.plugin = plugin;
+		protocolManager = ProtocolLibrary.getProtocolManager();
+		protocolManager.addPacketListener(new PacketAdapter(this.plugin, PacketType.Play.Client.UPDATE_SIGN) {
+			@Override
+			public void onPacketReceiving(PacketEvent event) {
+				Player player = event.getPlayer();
+				SignEdit signEdit = endSignEdit(player);
+				if (signEdit == null) return; // player wasn't editing
+
+				event.setCancelled(true);
+				String[] lines = event.getPacket().getStringArrays().read(0);
+				if (SignEditing.this.plugin.refreshSign(signEdit.billboard)) {
+					// still owner and has still the permission?
+					if (signEdit.billboard.canEdit(player) && player.hasPermission(BillboardsPlugin.RENT_PERMISSION)) {
+						// update billboard sign content:
+						Bukkit.getScheduler().runTask(plugin, () -> {
+							Sign target = (Sign) signEdit.billboard.getLocation().getBukkitLocation().getBlock().getState();
+							for (int i = 0; i < lines.length && i < 4; i++) {
+								target.setLine(i, lines[i]);
+							}
+							target.update();
+						});
+					}
+				}
+				Bukkit.getScheduler().runTaskLater(plugin, () -> {
+					if (player.isOnline()) {
+						player.sendBlockChange(signEdit.location, signEdit.location.getBlock().getBlockData());
+					}
+				}, 2L);
+			}
+		});
 	}
 
 	void onPluginEnable() {
@@ -40,137 +68,37 @@ public class SignEditing implements Listener {
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			this.endSignEdit(player);
 		}
+		protocolManager.removePacketListeners(plugin);
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST)
-	void onBlockPlaceEarly(BlockPlaceEvent event) {
-		Block placedBlock = event.getBlockPlaced();
-		if (!Utils.isSign(placedBlock.getType())) return;
-		// making sure the player is actually holding a sign, just in case:
-		ItemStack itemInHand = event.getItemInHand();
-		if (!Utils.isSign(itemInHand.getType())) return;
-
-		Block placedAgainstBlock = event.getBlockAgainst();
-		if (!Utils.isSign(placedAgainstBlock.getType())) return;
-
-		SoftBlockLocation placedAgainstBlockLocation = new SoftBlockLocation(placedAgainstBlock);
-		BillboardSign billboard = plugin.getBillboard(placedAgainstBlockLocation);
-		if (billboard == null) return;
-
-		Player player = event.getPlayer();
-		String playerName = player.getName();
-
-		// Cancel the event early so that other plugins ignore it and don't print their cancellation messages:
-		event.setCancelled(true);
-
-		if (billboard.canEdit(player)) {
-			editing.put(playerName, new SignEdit(billboard, placedBlock.getLocation(), itemInHand.clone(), event.getHand()));
+	public void openSignEdit(Player player, BillboardSign billboard) {
+		if (!player.isOnline()) {
+			return;
 		}
-	}
+		Location location = player.getLocation();
+		location.setY(location.getBlockY() - 4);
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	void onBlockPlaceLate(BlockPlaceEvent event) {
-		Player player = event.getPlayer();
-		String playerName = player.getName();
+		Block block = billboard.getLocation().getBukkitLocation().getBlock();
 
-		if (editing.containsKey(playerName)) {
-			// make sure the sign can be placed, so that the sign edit window opens for the player
-			event.setCancelled(false);
+		// create a fake sign
+		player.sendBlockChange(location, block.getType().createBlockData());
+		player.sendSignChange(location, ((Sign) block.getState()).getLines());
+
+		// open sign edit gui for player
+		PacketContainer openSign = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.OPEN_SIGN_EDITOR);
+		BlockPosition position = new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+		openSign.getBlockPositionModifier().write(0, position);
+		try {
+			ProtocolLibrary.getProtocolManager().sendServerPacket(player, openSign);
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
 		}
-	}
-
-	@EventHandler(priority = EventPriority.LOWEST)
-	void onSignEditEarly(SignChangeEvent event) {
-		// We only handle the event early if bypassing of other plugins is enabled:
-		if (!plugin.bypassSignChangeBlocking) return;
-
-		Player player = event.getPlayer();
-		String playerName = player.getName();
-		if (!editing.containsKey(playerName)) return;
-
-		// Cancel the event early so that other plugins ignore it and don't print their cancellation messages:
-		event.setCancelled(true);
-	}
-
-	@EventHandler(priority = EventPriority.HIGH)
-	void onSignEditLate(SignChangeEvent event) {
-		Player player = event.getPlayer();
-		SignEdit signEdit = this.endSignEdit(player);
-		if (signEdit == null) return; // player wasn't editing
-
-		if (plugin.refreshSign(signEdit.billboard)) {
-			// still owner and has still the permission?
-			if (signEdit.billboard.canEdit(player) && player.hasPermission(BillboardsPlugin.RENT_PERMISSION)) {
-				if (!event.isCancelled() || plugin.bypassSignChangeBlocking) {
-					// update billboard sign content:
-					Sign target = (Sign) signEdit.billboard.getLocation().getBukkitLocation().getBlock().getState();
-					for (int i = 0; i < 4; i++) {
-						target.setLine(i, event.getLine(i));
-					}
-					target.update();
-				} else {
-					// some other plugin cancelled sign updating (ex. anti-swearing plugins)
-				}
-			}
-		}
-
-		// cancel event:
-		event.setCancelled(true);
-	}
-
-	private static boolean addItemToHand(PlayerInventory playerInventory, EquipmentSlot hand, ItemStack itemStack) {
-		if (hand == EquipmentSlot.HAND) {
-			// add to main hand:
-			ItemStack itemInMainHand = playerInventory.getItemInMainHand();
-			if (itemInMainHand.getType() == Material.AIR) {
-				playerInventory.setItemInMainHand(itemStack);
-				return true;
-			} else if (itemStack.isSimilar(itemInMainHand) && itemInMainHand.getAmount() < itemInMainHand.getMaxStackSize()) {
-				itemInMainHand.setAmount(itemInMainHand.getAmount() + 1);
-				return true;
-			}
-		} else if (hand == EquipmentSlot.OFF_HAND) {
-			// add to off hand:
-			ItemStack itemInOffHand = playerInventory.getItemInOffHand();
-			if (itemInOffHand.getType() == Material.AIR) {
-				playerInventory.setItemInOffHand(itemStack);
-				return true;
-			} else if (itemStack.isSimilar(itemInOffHand) && itemInOffHand.getAmount() < itemInOffHand.getMaxStackSize()) {
-				itemInOffHand.setAmount(itemInOffHand.getAmount() + 1);
-				return true;
-			}
-		}
-		// couldn't add the item:
-		return false;
+		editing.put(player.getName(), new SignEdit(billboard, location));
 	}
 
 	// returns null if the player was editing
 	public SignEdit endSignEdit(Player player) {
-		String playerName = player.getName();
-		SignEdit signEdit = editing.remove(playerName);
-		if (signEdit == null) return null;
-
-		// remove editing sign:
-		signEdit.source.getBlock().setType(Material.AIR);
-
-		// give sign item back:
-		if (player.getGameMode() != GameMode.CREATIVE) {
-			// return sign item:
-			ItemStack signItem = signEdit.originalSignItem.clone();
-			signItem.setAmount(1);
-
-			PlayerInventory playerInventory = player.getInventory();
-			if (!addItemToHand(playerInventory, signEdit.originalHand, signItem)) {
-				// hand full: try to add to inventory:
-				if (!playerInventory.addItem(signItem).isEmpty()) {
-					// inventory full: drop the item:
-					Block block = signEdit.source.getBlock();
-					block.getWorld().dropItem(block.getLocation().add(0.5D, 0.5D, 0.5D), signItem);
-				}
-			}
-			player.updateInventory();
-		}
-		return signEdit;
+		return editing.remove(player.getName());
 	}
 
 	@EventHandler

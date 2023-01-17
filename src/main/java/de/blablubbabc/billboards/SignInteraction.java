@@ -158,10 +158,8 @@ public class SignInteraction implements Listener {
 				player.sendMessage(Messages.getMessage(Message.CLICK_TO_RENT, billboard.getMessageArgs()));
 			} else {
 				// is owner -> edit
-				ItemStack itemInHand = event.getItem();
-				if (itemInHand != null && Utils.isSign(itemInHand.getType()) && billboard.canEdit(player)) {
-					// do not cancel, so that the block place event is called that initializes sign editing:
-					event.setCancelled(false);
+				if (player.isSneaking() && billboard.canEdit(player)) {
+					plugin.signEditing.openSignEdit(player, billboard);
 					return;
 				}
 
