@@ -37,7 +37,7 @@ public class SignEditing implements Listener {
 				if (signEdit == null) return; // player wasn't editing
 
 				event.setCancelled(true);
-				String[] lines = event.getPacket().getStringArrays().read(0);
+				String[] lines = encodeColor(event.getPacket().getStringArrays().read(0), player);
 				if (SignEditing.this.plugin.refreshSign(signEdit.billboard)) {
 					// still owner and has still the permission?
 					if (signEdit.billboard.canEdit(player) && player.hasPermission(BillboardsPlugin.RENT_PERMISSION)) {
@@ -70,7 +70,27 @@ public class SignEditing implements Listener {
 		}
 		protocolManager.removePacketListeners(plugin);
 	}
-
+	public String[] encodeColor(String[] lines, Player player) {
+		boolean color = player == null || player.hasPermission(BillboardsPlugin.SIGN_COLOR_PERMISSION);
+		boolean format = player == null || player.hasPermission(BillboardsPlugin.SIGN_FORMAT_PERMISSION);
+		boolean magic = player == null || player.hasPermission(BillboardsPlugin.SIGN_FORMAT_MAGIC_PERMISSION);
+		if (color || format || magic) {
+			for (int i = 0; i < lines.length; i++) {
+				String line = lines[i];
+				if (color) line = line.replaceAll("&([0-9A-Fa-f])", "§$1");
+				if (format) line = line.replaceAll("&([LMNORlmnor])", "§$1");
+				if (magic) line = line.replace("&k", "§k");
+				lines[i] = line;
+			}
+		}
+		return lines;
+	}
+	public String[] decodeColor(String[] lines) {
+		for (int i = 0; i < lines.length; i++) {
+			lines[i] = lines[i].replace("§", "&");
+		}
+		return lines;
+	}
 	public void openSignEdit(Player player, BillboardSign billboard) {
 		if (!player.isOnline()) {
 			return;
@@ -82,7 +102,7 @@ public class SignEditing implements Listener {
 
 		// create a fake sign
 		player.sendBlockChange(location, block.getType().createBlockData());
-		player.sendSignChange(location, ((Sign) block.getState()).getLines());
+		player.sendSignChange(location, decodeColor(((Sign) block.getState()).getLines()));
 
 		// open sign edit gui for player
 		PacketContainer openSign = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.OPEN_SIGN_EDITOR);

@@ -49,6 +49,9 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	public static Economy economy = null;
 	public static final String ADMIN_PERMISSION = "billboards.admin";
 	public static final String RENT_PERMISSION = "billboards.rent";
+	public static final String SIGN_COLOR_PERMISSION = "billboards.sign.color";
+	public static final String SIGN_FORMAT_PERMISSION = "billboards.sign.format";
+	public static final String SIGN_FORMAT_MAGIC_PERMISSION = "billboards.sign.format.magic";
 	public static final String CREATE_PERMISSION = "billboards.create";
 
 	private static final String BILLBOARDS_DATA_FILE = "billboards.yml";
@@ -64,9 +67,9 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	private final Collection<BillboardSign> billboardsView = Collections.unmodifiableCollection(billboards.values());
 
 	// controllers:
-	private final SignInteraction signInteration = new SignInteraction(this);
-	private final SignProtection signProtection = new SignProtection(this);
-	private final SignEditing signEditing = new SignEditing(this);
+	final SignInteraction signInteration = new SignInteraction(this);
+	final SignProtection signProtection = new SignProtection(this);
+	final SignEditing signEditing = new SignEditing(this);
 
 	@Override
 	public void onEnable() {

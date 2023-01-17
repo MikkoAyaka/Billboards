@@ -21,11 +21,14 @@ An admin can remove those signs again by crouching and breaking it.
 
 ## Permissions
 
-| Permission        | Detail                                                  | Default |
-|-------------------|---------------------------------------------------------|---------|
-| billboards.admin  | Can add new billboard signs, and can remove them again. | op      |
-| billboards.rent   | Can rent billboard signs and edit those.                | true    |
-| billboards.create | Can create player billboard signs.　                     | false　  |
+| Permission             | Detail                                                  | Default |
+|------------------------|---------------------------------------------------------|---------|
+| billboards.admin       | Can add new billboard signs, and can remove them again. | op      |
+| billboards.sign.color  | Can use color code on signs.                            | false   |
+| billboards.sign.format | Can use format code on signs.                           | false   |
+| billboards.sign.magic  | Can use magic code (§k) on signs.                       | false   |
+| billboards.rent        | Can rent billboard signs and edit those.                | true    |
+| billboards.create      | Can create player billboard signs.　                     | false　  |
 
 **`billboards.create` is experimental. Read about the current flaws below!**
 
