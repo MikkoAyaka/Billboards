@@ -44,10 +44,10 @@ public class SignInteraction implements Listener {
 		this.confirmations.clear();
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOWEST)
 	void onInteract(PlayerInteractEvent event) {
 		Block clickedBlock = event.getClickedBlock();
-		if (clickedBlock == null || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+		if (clickedBlock == null || event.getAction() != Action.LEFT_CLICK_BLOCK) return;
 		Player player = event.getPlayer();
 		String playerName = player.getName();
 
