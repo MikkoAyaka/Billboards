@@ -46,8 +46,8 @@ public class BillboardCommands implements CommandExecutor {
 		}
 
 		// get targeted sign:
-		Block targetBlock = player.getTargetBlock((Set<Material>) null, 10);
-		if (targetBlock == null || !Utils.isSign(targetBlock.getType())) {
+		Block targetBlock = player.getTargetBlock(null, 10);
+		if (!Utils.isSign(targetBlock.getType())) {
 			player.sendMessage(Messages.getMessage(Message.NO_TARGETED_SIGN));
 			return true;
 		}
@@ -75,8 +75,8 @@ public class BillboardCommands implements CommandExecutor {
 				player.sendMessage(Messages.getMessage(Message.INVALID_NUMBER, args[1]));
 				return true;
 			}
-			price = priceArgument.intValue();
-			duration = durationArgument.intValue();
+			price = priceArgument;
+			duration = durationArgument;
 		}
 
 		Player creator = hasAdminPermission ? null : player;
