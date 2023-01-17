@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+}
+
+group = 'de.blablubbabc'
+version = '2.3.2'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'spigot-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/groups/public/'
+    }
+    maven {
+        name = 'vault-repo'
+        url = 'https://jitpack.io'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
+}
+
+compileJava {
+    options.encoding = 'utf-8'
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
