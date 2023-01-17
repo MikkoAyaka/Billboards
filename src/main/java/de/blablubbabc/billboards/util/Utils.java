@@ -6,16 +6,13 @@ import org.bukkit.Material;
 
 public class Utils {
 
-	private Utils() {
-	}
-
 	public static boolean isEmpty(String string) {
 		return (string == null || string.isEmpty());
 	}
 
 	public static boolean isSign(Material material) {
 		if (material == null) return false;
-		return material.data == org.bukkit.block.data.type.Sign.class || material.data == org.bukkit.block.data.type.WallSign.class;
+		return material.data.isAssignableFrom(org.bukkit.block.data.type.Sign.class) || material.data.isAssignableFrom(org.bukkit.block.data.type.WallSign.class);
 	}
 
 	public static Integer parseInteger(String string) {
