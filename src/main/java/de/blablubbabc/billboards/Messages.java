@@ -63,6 +63,7 @@ class Messages {
 		addDefault(defaults, Message.RENT_SIGN_LINE_2, "&f{4}", "0: price  1: duration  2: creator name  3: creator uuid  4: owner name  5: owner uuid");
 		addDefault(defaults, Message.RENT_SIGN_LINE_3, "&cSneak & right-", "0: price  1: duration  2: creator name  3: creator uuid  4: owner name  5: owner uuid");
 		addDefault(defaults, Message.RENT_SIGN_LINE_4, "&cclick with a sign", "0: price  1: duration  2: creator name  3: creator uuid  4: owner name  5: owner uuid");
+		addDefault(defaults, Message.RELOADED, "&aAll configurations and messages has been reloaded.", null);
 
 		// load the message file
 		FileConfiguration config = YamlConfiguration.loadConfiguration(new File(messagesFilePath));

@@ -35,7 +35,11 @@ public class BillboardCommands implements CommandExecutor {
 			player.sendMessage(Messages.getMessage(Message.NO_PERMISSION));
 			return true;
 		}
-
+		if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+			plugin.reloadConfig();
+			player.sendMessage(Messages.getMessage(Message.RELOADED));
+			return true;
+		}
 		if (args.length > 3) {
 			return false;
 		}
