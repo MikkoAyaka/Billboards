@@ -82,7 +82,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		}
 
 		// load messages:
-		Messages.loadMessages(new File(getDataFolder(), "messages.yml"), this.getLogger());
+		this.reloadMessages();
 
 		// load config (and write defaults back to file):
 		this.reloadConfig();
@@ -101,13 +101,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		this.getCommand("billboard").setExecutor(commands);
 
 		// start refresh timer:
-		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
-
-			@Override
-			public void run() {
-				refreshAllSigns();
-			}
-		}, 5L, 20L * 60 * 10);
+		Bukkit.getScheduler().runTaskTimer(this, this::refreshAllSigns, 5L, 20L * 60 * 10);
 	}
 
 	@Override
@@ -122,6 +116,10 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	}
 
 	// CONFIG
+
+	public void reloadMessages() {
+		Messages.loadMessages(new File(getDataFolder(), "messages.yml"), this.getLogger());
+	}
 
 	@Override
 	public void reloadConfig() {

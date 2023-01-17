@@ -36,6 +36,7 @@ public class BillboardCommands implements CommandExecutor {
 			return true;
 		}
 		if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+			plugin.reloadMessages();
 			plugin.reloadConfig();
 			player.sendMessage(Messages.getMessage(Message.RELOADED));
 			return true;
