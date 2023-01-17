@@ -16,11 +16,11 @@ class Messages {
 	private static String[] messages;
 
 	// loads messages from the messages.yml configuration file into memory
-	static void loadMessages(String messagesFilePath, Logger logger) {
+	static void loadMessages(File messagesFile, Logger logger) {
 		Message[] messageIDs = Message.values();
 		messages = new String[Message.values().length];
 
-		Map<String, CustomizableMessage> defaults = new HashMap<String, CustomizableMessage>();
+		Map<String, CustomizableMessage> defaults = new HashMap<>();
 
 		// initialize default messages
 		addDefault(defaults, Message.UNKNOWN_NAME, "unknown", "Used to represent an unknown player name");
@@ -66,7 +66,7 @@ class Messages {
 		addDefault(defaults, Message.RELOADED, "&aAll configurations and messages has been reloaded.", null);
 
 		// load the message file
-		FileConfiguration config = YamlConfiguration.loadConfiguration(new File(messagesFilePath));
+		FileConfiguration config = YamlConfiguration.loadConfiguration(messagesFile);
 
 		// for each message ID
 		for (int i = 0; i < messageIDs.length; i++) {
@@ -95,9 +95,9 @@ class Messages {
 
 		// save any changes
 		try {
-			config.save(messagesFilePath);
+			config.save(messagesFile);
 		} catch (IOException exception) {
-			logger.severe("Unable to write to the configuration file at \"" + messagesFilePath + "\"");
+			logger.severe("Unable to write to the configuration file at \"" + messagesFile.getName() + "\"");
 		}
 
 		defaults.clear();

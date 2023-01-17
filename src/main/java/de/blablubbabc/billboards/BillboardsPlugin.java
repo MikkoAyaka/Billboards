@@ -82,7 +82,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		}
 
 		// load messages:
-		Messages.loadMessages("plugins" + File.separator + "Billboards" + File.separator + "messages.yml", this.getLogger());
+		Messages.loadMessages(new File(getDataFolder(), "messages.yml"), this.getLogger());
 
 		// load config (and write defaults back to file):
 		this.reloadConfig();
