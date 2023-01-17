@@ -1,0 +1,111 @@
+UNKNOWN_NAME:
+  Text: unknown
+  Notes: Used to represent an unknown player name
+UNKNOWN_UUID:
+  Text: '-'
+  Notes: Used to represent an unknown uuid
+SERVER_OWNER_NAME:
+  Text: SERVER
+  Notes: Used to represent billboards created or owned by the server
+YOU_HAVE_TO_SNEAK:
+  Text: '&7You have to sneak to remove this.'
+SIGN_REMOVED:
+  Text: '&aBillboard sign was removed.'
+ADDED_SIGN:
+  Text: '&aThis sign can now be rented from &7{2} &afor &b{0} $ &afor &b{1} days&a.'
+  Notes: '0: price  1: duration  2: creator name  3: creator uuid'
+ALREADY_BILLBOARD_SIGN:
+  Text: '&7This sign is already a billboard sign.'
+NO_TARGETED_SIGN:
+  Text: '&7You have to target a sign.'
+ONLY_AS_PLAYER:
+  Text: This only works as player.
+INFO_HEADER:
+  Text: '&3Billboard - Information'
+INFO_CREATOR:
+  Text: '&5Creator: &2{0}'
+  Notes: '0: creator name  1: creator uuid'
+INFO_OWNER:
+  Text: '&5Owner: &2{0}'
+  Notes: '0: owner name  1: owner uuid'
+INFO_PRICE:
+  Text: '&5Price: &2{0} $'
+  Notes: '0: price'
+INFO_DURATION:
+  Text: '&5Duration: &2{0} days'
+  Notes: '0: duration'
+INFO_RENT_SINCE:
+  Text: '&5Rented since: &2{0}'
+  Notes: '0: since date'
+INFO_RENT_UNTIL:
+  Text: '&5Rented until: &2{0}'
+  Notes: '0: until date'
+INFO_TIME_LEFT:
+  Text: '&5Time remaining: &2{0}'
+  Notes: '0: time left'
+CLICK_TO_RENT:
+  Text: '&6Click the sign again, to rent it from &7{2} &6for &b{0} $ &6for &b{1} days&6.'
+  Notes: '0: price  1: duration  2: creator name  3: creator uuid'
+YOU_HAVE_RENT_A_SIGN:
+  Text: "&aYou have rented this sign now from &7{2} &afor &b{1} days&a. \n&bTo edit\
+    \ it: &aSneak and right-click it."
+  Notes: '0: price  1: duration  2: creator name  3: creator uuid  4: owner name  5:
+    owner uuid'
+TRANSACTION_FAILURE:
+  Text: '&cSomething went wrong: &6{0}'
+  Notes: '0: errorMessage'
+NO_LONGER_AVAILABLE:
+  Text: '&cThis sign is no longer available!'
+NOT_ENOUGH_MONEY:
+  Text: "&cYou have not enough money! \nYou need &6{0} $&c, but you only have &6{1}\
+    \ $&c!"
+  Notes: '0: price  1: balance'
+MAX_RENT_LIMIT_REACHED:
+  Text: '&cYou already own too many billboard signs &7(limit: &6{0}&7)&c!'
+  Notes: '0: limit'
+CANT_RENT_OWN_SIGN:
+  Text: '&cYou can''t rent your own sign.'
+NO_PERMISSION:
+  Text: '&cYou have no permission for that.'
+PLAYER_NOT_FOUND:
+  Text: '&cCouldn''t find player &6{0}'
+  Notes: '0: player name'
+SIGN_LINE_1:
+  Text: '&bRENT ME'
+  Notes: '0: price  1: duration  2: creator name  3: creator uuid'
+SIGN_LINE_2:
+  Text: '&f(right-click!)'
+  Notes: '0: price  1: duration  2: creator name  3: creator uuid'
+SIGN_LINE_3:
+  Text: '&8{0} $'
+  Notes: '0: price  1: duration  2: creator name  3: creator uuid'
+SIGN_LINE_4:
+  Text: '&8{1} days'
+  Notes: '0: price  1: duration  2: creator name  3: creator uuid'
+DATE_FORMAT:
+  Text: dd/MM/yyyy HH:mm:ss
+  Notes: Only change this if you know what you are doing..
+TIME_REMAINING_FORMAT:
+  Text: '%d days %d h %d min'
+  Notes: Only change this if you know what you are doing..
+INVALID_NUMBER:
+  Text: '&cInvalid number: &6{0}'
+  Notes: '0: the invalid argument'
+RENT_SIGN_LINE_1:
+  Text: '&aRent by'
+  Notes: '0: price  1: duration  2: creator name  3: creator uuid  4: owner name  5:
+    owner uuid'
+RENT_SIGN_LINE_2:
+  Text: '&f{4}'
+  Notes: '0: price  1: duration  2: creator name  3: creator uuid  4: owner name  5:
+    owner uuid'
+RENT_SIGN_LINE_3:
+  Text: '&cSneak & right-'
+  Notes: '0: price  1: duration  2: creator name  3: creator uuid  4: owner name  5:
+    owner uuid'
+RENT_SIGN_LINE_4:
+  Text: '&cclick to edit'
+  Notes: '0: price  1: duration  2: creator name  3: creator uuid  4: owner name  5:
+    owner uuid'
+RELOADED:
+  Text: '&aAll configurations and messages has been reloaded.'

@@ -2,7 +2,9 @@ name: Billboards
 main: de.blablubbabc.billboards.BillboardsPlugin
 api-version: '1.13'
 version: '${version}'
-author: blablubbabc
+authors:
+  - blablubbabc
+  - MrXiaoM
 description: Rent-able signs.
 depend:
   - Vault

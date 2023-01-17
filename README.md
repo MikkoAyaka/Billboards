@@ -2,6 +2,13 @@
 
 Billboards gives you the possibility to setup rentable signs. You could for example place a wall of those signs at your protected spawn region and players will be able to rent those signs and edit their text, even though they have no build permission there. That gives them a great possibility to, for example, advertise their goods at a place where many players come along frequently.
 
+## What's changed in folk version
+
+* Use Gradle.
+* Depend on ProtocolLib, no longer need to held a sign to edit.
+* Add format code (`&`->`§`) support with permissions.
+* You can reload configurations and messages by command.
+
 ## Step by step walk-through
 
 An admin places some signs, for example near the spawn.
@@ -54,6 +61,11 @@ Things that have to be added in the future in order for the player signs to prop
 All messages are configurable and translatable.
 This plugin requires [ProtocolLib](https://github.com/dmulloy2/ProtocolLib/), [Vault](https://github.com/MilkBowl/Vault) for the economy interaction.
 
+## Languages
+
+Please check [lang](/lang) folder.
+
+If there are not your language, PRs from [messages.yml](/lang/messages.yml) welcome.
 
 ## Links
 
