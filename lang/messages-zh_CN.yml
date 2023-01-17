@@ -47,8 +47,7 @@ CLICK_TO_RENT:
   Text: '&b&lBillboards &7>> &f再次点击牌子, 从 &e{2} &f租用, 租用价格为 &e{0}&f, 租期为 &e{1} &f天.'
   Notes: '0: 价格  1: 租用时间(天)  2: 租用者名字  3: 租用者 uuid'
 YOU_HAVE_RENT_A_SIGN:
-  Text: "&b&lBillboards &7>> &a你成功从 &7{2} 租用了这块广告牌! 租期为 &b{1} 天&a. \n&e要编辑广告牌, 请手持告示牌
-    &fShift+右键 &e点击你的牌子."
+  Text: "&b&lBillboards &7>> &a你成功从 &7{2} 租用了这块广告牌! 租期为 &b{1} 天&a. \n&e要编辑广告牌, 请 &fShift+右键 &e点击你的牌子."
   Notes: '0: 价格  1: 租用时间(天)  2: 创建者名字  3: 创建者 uuid  4: 租用者名字  5: 租用者 uuid'
 TRANSACTION_FAILURE:
   Text: '&c错误: &6{0}'
