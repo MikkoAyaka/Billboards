@@ -26,7 +26,7 @@ public class SignProtection implements Listener {
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	void onBlockBreak(BlockBreakEvent event) {
-		// only allow breaking if has permission and is sneaking
+		// only allow breaking if it has permission and is sneaking
 		Player player = event.getPlayer();
 		Block block = event.getBlock();
 		SoftBlockLocation blockLocation = new SoftBlockLocation(block);

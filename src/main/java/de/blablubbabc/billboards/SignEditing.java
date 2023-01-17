@@ -26,7 +26,7 @@ public class SignEditing implements Listener {
 
 	private final BillboardsPlugin plugin;
 	// player name -> editing information
-	private final Map<String, SignEdit> editing = new HashMap<String, SignEdit>();
+	private final Map<String, SignEdit> editing = new HashMap<>();
 
 	SignEditing(BillboardsPlugin plugin) {
 		this.plugin = plugin;
@@ -42,13 +42,13 @@ public class SignEditing implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.LOWEST)
 	void onBlockPlaceEarly(BlockPlaceEvent event) {
 		Block placedBlock = event.getBlockPlaced();
 		if (!Utils.isSign(placedBlock.getType())) return;
 		// making sure the player is actually holding a sign, just in case:
 		ItemStack itemInHand = event.getItemInHand();
-		if (itemInHand == null || !Utils.isSign(itemInHand.getType())) return;
+		if (!Utils.isSign(itemInHand.getType())) return;
 
 		Block placedAgainstBlock = event.getBlockAgainst();
 		if (!Utils.isSign(placedAgainstBlock.getType())) return;
@@ -68,7 +68,7 @@ public class SignEditing implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	void onBlockPlaceLate(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
 		String playerName = player.getName();
@@ -79,7 +79,7 @@ public class SignEditing implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.LOWEST)
 	void onSignEditEarly(SignChangeEvent event) {
 		// We only handle the event early if bypassing of other plugins is enabled:
 		if (!plugin.bypassSignChangeBlocking) return;
@@ -92,7 +92,7 @@ public class SignEditing implements Listener {
 		event.setCancelled(true);
 	}
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.HIGH)
 	void onSignEditLate(SignChangeEvent event) {
 		Player player = event.getPlayer();
 		SignEdit signEdit = this.endSignEdit(player);
@@ -122,7 +122,7 @@ public class SignEditing implements Listener {
 		if (hand == EquipmentSlot.HAND) {
 			// add to main hand:
 			ItemStack itemInMainHand = playerInventory.getItemInMainHand();
-			if (itemInMainHand == null || itemInMainHand.getType() == Material.AIR) {
+			if (itemInMainHand.getType() == Material.AIR) {
 				playerInventory.setItemInMainHand(itemStack);
 				return true;
 			} else if (itemStack.isSimilar(itemInMainHand) && itemInMainHand.getAmount() < itemInMainHand.getMaxStackSize()) {
@@ -132,7 +132,7 @@ public class SignEditing implements Listener {
 		} else if (hand == EquipmentSlot.OFF_HAND) {
 			// add to off hand:
 			ItemStack itemInOffHand = playerInventory.getItemInOffHand();
-			if (itemInOffHand == null || itemInOffHand.getType() == Material.AIR) {
+			if (itemInOffHand.getType() == Material.AIR) {
 				playerInventory.setItemInOffHand(itemStack);
 				return true;
 			} else if (itemStack.isSimilar(itemInOffHand) && itemInOffHand.getAmount() < itemInOffHand.getMaxStackSize()) {

@@ -44,7 +44,7 @@ public class SignInteraction implements Listener {
 		this.confirmations.clear();
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	void onInteract(PlayerInteractEvent event) {
 		Block clickedBlock = event.getClickedBlock();
 		if (clickedBlock == null || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;

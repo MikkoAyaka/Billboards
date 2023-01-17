@@ -69,9 +69,8 @@ class Messages {
 		FileConfiguration config = YamlConfiguration.loadConfiguration(messagesFile);
 
 		// for each message ID
-		for (int i = 0; i < messageIDs.length; i++) {
+		for (Message messageID : messageIDs) {
 			// get default for this message
-			Message messageID = messageIDs[i];
 			CustomizableMessage messageData = defaults.get(messageID.name());
 
 			// if default is missing, log an error and use some fake data for
