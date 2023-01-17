@@ -43,7 +43,7 @@ class Messages {
 		addDefault(defaults, Message.INFO_TIME_LEFT, "&5Time remaining: &2{0}", "0: time left");
 		addDefault(defaults, Message.CLICK_TO_RENT, "&6Click the sign again, to rent it from &7{2} &6for &b{0} $ &6for &b{1} days&6.",
 				"0: price  1: duration  2: creator name  3: creator uuid");
-		addDefault(defaults, Message.YOU_HAVE_RENT_A_SIGN, "&aYou have rented this sign now from &7{2} &afor &b{1} days&a. \n&bTo edit it: &aSneak and left-click it with a sign.",
+		addDefault(defaults, Message.YOU_HAVE_RENT_A_SIGN, "&aYou have rented this sign now from &7{2} &afor &b{1} days&a. \n&bTo edit it: &aSneak and right-click it with a sign.",
 				"0: price  1: duration  2: creator name  3: creator uuid  4: owner name  5: owner uuid");
 		addDefault(defaults, Message.TRANSACTION_FAILURE, "&cSomething went wrong: &6{0}", "0: errorMessage");
 		addDefault(defaults, Message.NO_LONGER_AVAILABLE, "&cThis sign is no longer available!", null);
@@ -53,7 +53,7 @@ class Messages {
 		addDefault(defaults, Message.NO_PERMISSION, "&cYou have no permission for that.", null);
 		addDefault(defaults, Message.PLAYER_NOT_FOUND, "&cCouldn't find player &6{0}", "0: player name");
 		addDefault(defaults, Message.SIGN_LINE_1, "&bRENT ME", "0: price  1: duration  2: creator name  3: creator uuid");
-		addDefault(defaults, Message.SIGN_LINE_2, "&f(left-click!)", "0: price  1: duration  2: creator name  3: creator uuid");
+		addDefault(defaults, Message.SIGN_LINE_2, "&f(right-click!)", "0: price  1: duration  2: creator name  3: creator uuid");
 		addDefault(defaults, Message.SIGN_LINE_3, "&8{0} $", "0: price  1: duration  2: creator name  3: creator uuid");
 		addDefault(defaults, Message.SIGN_LINE_4, "&8{1} days", "0: price  1: duration  2: creator name  3: creator uuid");
 		addDefault(defaults, Message.DATE_FORMAT, "dd/MM/yyyy HH:mm:ss", "Only change this if you know what you are doing..");
@@ -61,7 +61,7 @@ class Messages {
 		addDefault(defaults, Message.INVALID_NUMBER, "&cInvalid number: &6{0}", "0: the invalid argument");
 		addDefault(defaults, Message.RENT_SIGN_LINE_1, "&aRent by", "0: price  1: duration  2: creator name  3: creator uuid  4: owner name  5: owner uuid");
 		addDefault(defaults, Message.RENT_SIGN_LINE_2, "&f{4}", "0: price  1: duration  2: creator name  3: creator uuid  4: owner name  5: owner uuid");
-		addDefault(defaults, Message.RENT_SIGN_LINE_3, "&cSneak & left-", "0: price  1: duration  2: creator name  3: creator uuid  4: owner name  5: owner uuid");
+		addDefault(defaults, Message.RENT_SIGN_LINE_3, "&cSneak & right-", "0: price  1: duration  2: creator name  3: creator uuid  4: owner name  5: owner uuid");
 		addDefault(defaults, Message.RENT_SIGN_LINE_4, "&cclick with a sign", "0: price  1: duration  2: creator name  3: creator uuid  4: owner name  5: owner uuid");
 		addDefault(defaults, Message.RELOADED, "&aAll configurations and messages has been reloaded.", null);
 
