@@ -25,9 +25,13 @@ public class SignEditing implements Listener {
 	private final BillboardsPlugin plugin;
 	// player name -> editing information
 	private final Map<String, SignEdit> editing = new HashMap<>();
-	private final ProtocolManager protocolManager;
+	private ProtocolManager protocolManager;
 	SignEditing(BillboardsPlugin plugin) {
 		this.plugin = plugin;
+	}
+
+	void onPluginEnable() {
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		protocolManager = ProtocolLibrary.getProtocolManager();
 		protocolManager.addPacketListener(new PacketAdapter(this.plugin, PacketType.Play.Client.UPDATE_SIGN) {
 			@Override
@@ -58,10 +62,6 @@ public class SignEditing implements Listener {
 				}, 2L);
 			}
 		});
-	}
-
-	void onPluginEnable() {
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	void onPluginDisable() {
