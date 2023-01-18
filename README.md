@@ -2,7 +2,7 @@
 
 Billboards gives you the possibility to setup rentable signs. You could for example place a wall of those signs at your protected spawn region and players will be able to rent those signs and edit their text, even though they have no build permission there. That gives them a great possibility to, for example, advertise their goods at a place where many players come along frequently.
 
-## What's changed in folk version
+## What's changed in fork version
 
 * Use Gradle.
 * Depend on ProtocolLib, no longer need to held a sign to edit.
