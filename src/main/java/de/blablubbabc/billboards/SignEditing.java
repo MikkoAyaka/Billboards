@@ -38,8 +38,9 @@ public class SignEditing implements Listener {
 			public void onPacketReceiving(PacketEvent event) {
 				Player player = event.getPlayer();
 				SignEdit signEdit = endSignEdit(player);
-				if (signEdit == null) return; // player wasn't editing
-
+				if (signEdit == null) {
+					return; // player wasn't editing
+				}
 				event.setCancelled(true);
 				String[] lines = encodeColor(event.getPacket().getStringArrays().read(0), player);
 				if (SignEditing.this.plugin.refreshSign(signEdit.billboard)) {
@@ -54,7 +55,10 @@ public class SignEditing implements Listener {
 							target.update();
 						});
 					}
+					else player.sendMessage("§7你无法编辑这个广告牌");
 				}
+				else player.sendMessage("§7该广告牌无效");
+
 				Bukkit.getScheduler().runTaskLater(plugin, () -> {
 					if (player.isOnline()) {
 						player.sendBlockChange(signEdit.location, signEdit.location.getBlock().getBlockData());
@@ -92,7 +96,7 @@ public class SignEditing implements Listener {
 		return lines;
 	}
 	public void openSignEdit(Player player, BillboardSign billboard) {
-		if (!player.isOnline()) {
+		if (!player.isOnline() || editing.containsKey(player.getName())) {
 			return;
 		}
 		Location location = player.getLocation();
@@ -101,7 +105,7 @@ public class SignEditing implements Listener {
 		Block block = billboard.getLocation().getBukkitLocation().getBlock();
 
 		// create a fake sign
-		player.sendBlockChange(location, block.getType().createBlockData());
+		player.sendBlockChange(location, block.getBlockData());
 		player.sendSignChange(location, decodeColor(((Sign) block.getState()).getLines()));
 
 		// open sign edit gui for player
@@ -114,11 +118,16 @@ public class SignEditing implements Listener {
 			e.printStackTrace();
 		}
 		editing.put(player.getName(), new SignEdit(billboard, location));
+		player.sendMessage("§7你正在编辑广告牌");
 	}
 
 	// returns null if the player was editing
 	public SignEdit endSignEdit(Player player) {
-		return editing.remove(player.getName());
+		SignEdit sign = editing.remove(player.getName());
+		if (sign != null) {
+			player.sendMessage("§7结束编辑");
+		}
+		return sign;
 	}
 
 	@EventHandler
