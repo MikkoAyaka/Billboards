@@ -2,6 +2,8 @@ package de.blablubbabc.billboards.gui;
 
 import de.blablubbabc.billboards.entry.BillboardSign;
 import de.blablubbabc.billboards.BillboardsPlugin;
+import de.blablubbabc.billboards.message.Message;
+import de.blablubbabc.billboards.message.Messages;
 import de.blablubbabc.billboards.util.Items;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -41,15 +43,17 @@ public class GuiSignEdit implements IGui {
     public void onClick(InventoryAction action, ClickType click, InventoryType.SlotType slotType, int slot, ItemStack currentItem, ItemStack cursor, InventoryView view, InventoryClickEvent event) {
         if (slot == 0) {
             player.closeInventory();
+
+            player.sendMessage(Messages.getMessage(Message.PROMPT_START));
             plugin.chatPromptListener.put(player.getName(), s -> {
                 if (s.equalsIgnoreCase("#cancel")) return true;
                 if (!s.matches(plugin.itemActionCommandArgRegex)) {
-                    // TODO failed message.
+                    player.sendMessage(Messages.getMessage(Message.PROMPT_FAILED, player.getName(), s));
                     return false;
                 }
                 billboard.setCommandArg(s);
-                // TODO success message.
-                // TODO save billboard.
+                player.sendMessage(Messages.getMessage(Message.PROMPT_SUCCESS, player.getName(), s));
+                plugin.saveBillboards();
                 return true;
             });
         }

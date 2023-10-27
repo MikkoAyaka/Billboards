@@ -39,7 +39,10 @@ public enum Message {
 	RENT_SIGN_LINE_2,
 	RENT_SIGN_LINE_3,
 	RENT_SIGN_LINE_4,
-	RELOADED;
+	RELOADED,
+	PROMPT_START,
+	PROMPT_FAILED,
+	PROMPT_SUCCESS;
 
 	public String get(String... args) {
 		return Messages.getMessage(this, args);
