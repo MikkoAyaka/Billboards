@@ -18,10 +18,7 @@ import java.util.logging.Level;
 
 import com.google.common.collect.Lists;
 import de.blablubbabc.billboards.entry.BillboardSign;
-import de.blablubbabc.billboards.listener.GuiManager;
-import de.blablubbabc.billboards.listener.SignEditing;
-import de.blablubbabc.billboards.listener.SignInteraction;
-import de.blablubbabc.billboards.listener.SignProtection;
+import de.blablubbabc.billboards.listener.*;
 import de.blablubbabc.billboards.message.Message;
 import de.blablubbabc.billboards.message.Messages;
 import org.apache.commons.lang.Validate;
@@ -88,6 +85,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	public final SignInteraction signInteraction = new SignInteraction(this);
 	public final SignProtection signProtection = new SignProtection(this);
 	public final SignEditing signEditing = new SignEditing(this);
+	public final ChatPromptListener chatPromptListener = new ChatPromptListener(this);
 
 	private GuiManager guiManager = null;
 
@@ -115,6 +113,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		signInteraction.onPluginEnable();
 		signProtection.onPluginEnable();
 		signEditing.onPluginEnable();
+		chatPromptListener.onPluginEnable();
 
 		// register command handler:
 		BillboardCommands commands = new BillboardCommands(this);
@@ -130,6 +129,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		signInteraction.onPluginDisable();
 		signProtection.onPluginDisable();
 		signEditing.onPluginDisable();
+		chatPromptListener.onPluginDisable();
 
 		if (guiManager != null) guiManager.onDisable();
 
