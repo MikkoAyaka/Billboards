@@ -1,4 +1,4 @@
-package de.blablubbabc.billboards;
+package de.blablubbabc.billboards.entry;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;

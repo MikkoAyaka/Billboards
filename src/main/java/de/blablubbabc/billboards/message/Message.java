@@ -1,4 +1,4 @@
-package de.blablubbabc.billboards;
+package de.blablubbabc.billboards.message;
 
 public enum Message {
 

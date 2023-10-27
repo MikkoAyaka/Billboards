@@ -1,7 +1,10 @@
-package de.blablubbabc.billboards;
+package de.blablubbabc.billboards.entry;
 
 import java.util.UUID;
 
+import de.blablubbabc.billboards.BillboardsPlugin;
+import de.blablubbabc.billboards.message.Message;
+import de.blablubbabc.billboards.message.Messages;
 import org.apache.commons.lang.Validate;
 import org.bukkit.entity.Player;
 
@@ -52,7 +55,7 @@ public class BillboardSign {
 		return valid;
 	}
 
-	void setValid(boolean valid) {
+	public void setValid(boolean valid) {
 		this.valid = valid;
 	}
 

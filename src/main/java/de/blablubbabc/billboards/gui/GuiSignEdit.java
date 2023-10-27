@@ -1,11 +1,9 @@
 package de.blablubbabc.billboards.gui;
 
-import de.blablubbabc.billboards.BillboardSign;
+import de.blablubbabc.billboards.entry.BillboardSign;
 import de.blablubbabc.billboards.BillboardsPlugin;
-import de.blablubbabc.billboards.SignEditing;
 import de.blablubbabc.billboards.util.Items;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;

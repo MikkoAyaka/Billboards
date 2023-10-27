@@ -1,9 +1,9 @@
 package de.blablubbabc.billboards;
 
-import java.util.Set;
-
+import de.blablubbabc.billboards.entry.BillboardSign;
+import de.blablubbabc.billboards.message.Message;
+import de.blablubbabc.billboards.message.Messages;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

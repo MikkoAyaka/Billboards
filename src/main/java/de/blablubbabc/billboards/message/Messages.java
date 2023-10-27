@@ -1,4 +1,4 @@
-package de.blablubbabc.billboards;
+package de.blablubbabc.billboards.message;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,7 @@ public class Messages {
 	private static String[] messages;
 
 	// loads messages from the messages.yml configuration file into memory
-	static void loadMessages(File messagesFile, Logger logger) {
+	public static void loadMessages(File messagesFile, Logger logger) {
 		Message[] messageIDs = Message.values();
 		messages = new String[Message.values().length];
 
@@ -110,7 +110,7 @@ public class Messages {
 	}
 
 	// gets a message from memory
-	static String getMessage(Message messageID, String... args) {
+	public static String getMessage(Message messageID, String... args) {
 		String message = messages[messageID.ordinal()];
 		for (int i = 0; i < args.length; i++) {
 			String param = args[i];

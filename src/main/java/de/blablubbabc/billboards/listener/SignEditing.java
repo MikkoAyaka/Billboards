@@ -1,4 +1,4 @@
-package de.blablubbabc.billboards;
+package de.blablubbabc.billboards.listener;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -7,6 +7,9 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
+import de.blablubbabc.billboards.BillboardsPlugin;
+import de.blablubbabc.billboards.entry.BillboardSign;
+import de.blablubbabc.billboards.entry.SignEdit;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -26,11 +29,11 @@ public class SignEditing implements Listener {
 	// player name -> editing information
 	private final Map<String, SignEdit> editing = new HashMap<>();
 	private ProtocolManager protocolManager;
-	SignEditing(BillboardsPlugin plugin) {
+	public SignEditing(BillboardsPlugin plugin) {
 		this.plugin = plugin;
 	}
 
-	void onPluginEnable() {
+	public void onPluginEnable() {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		protocolManager = ProtocolLibrary.getProtocolManager();
 		protocolManager.addPacketListener(new PacketAdapter(this.plugin, PacketType.Play.Client.UPDATE_SIGN) {
@@ -68,7 +71,7 @@ public class SignEditing implements Listener {
 		});
 	}
 
-	void onPluginDisable() {
+	public void onPluginDisable() {
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			this.endSignEdit(player);
 		}

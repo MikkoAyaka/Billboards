@@ -1,4 +1,4 @@
-package de.blablubbabc.billboards;
+package de.blablubbabc.billboards.listener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -6,7 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import de.blablubbabc.billboards.BillboardsPlugin;
+import de.blablubbabc.billboards.entry.BillboardSign;
 import de.blablubbabc.billboards.gui.GuiSignEdit;
+import de.blablubbabc.billboards.message.Message;
+import de.blablubbabc.billboards.message.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
@@ -18,7 +22,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
 
 import de.blablubbabc.billboards.util.SoftBlockLocation;
 import de.blablubbabc.billboards.util.Utils;
@@ -32,19 +35,19 @@ public class SignInteraction implements Listener {
 	public final Map<String, BillboardSign> confirmations = new HashMap<String, BillboardSign>();
 	private SimpleDateFormat dateFormat;
 
-	SignInteraction(BillboardsPlugin plugin) {
+	public SignInteraction(BillboardsPlugin plugin) {
 		this.plugin = plugin;
 	}
 
-	void onPluginEnable() {
+	public void onPluginEnable() {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-	void onReloadMessages() {
+	public void onReloadMessages() {
 		dateFormat = new SimpleDateFormat(Messages.getMessage(Message.DATE_FORMAT));
 	}
 
-	void onPluginDisable() {
+	public void onPluginDisable() {
 		this.confirmations.clear();
 	}
 

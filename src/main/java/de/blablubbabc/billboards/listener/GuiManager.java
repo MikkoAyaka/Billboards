@@ -1,5 +1,6 @@
-package de.blablubbabc.billboards;
+package de.blablubbabc.billboards.listener;
 
+import de.blablubbabc.billboards.BillboardsPlugin;
 import de.blablubbabc.billboards.gui.IGui;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

@@ -17,6 +17,13 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import com.google.common.collect.Lists;
+import de.blablubbabc.billboards.entry.BillboardSign;
+import de.blablubbabc.billboards.listener.GuiManager;
+import de.blablubbabc.billboards.listener.SignEditing;
+import de.blablubbabc.billboards.listener.SignInteraction;
+import de.blablubbabc.billboards.listener.SignProtection;
+import de.blablubbabc.billboards.message.Message;
+import de.blablubbabc.billboards.message.Messages;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
