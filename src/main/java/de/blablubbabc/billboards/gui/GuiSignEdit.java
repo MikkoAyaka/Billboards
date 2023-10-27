@@ -44,15 +44,15 @@ public class GuiSignEdit implements IGui {
         if (slot == 0) {
             player.closeInventory();
 
-            player.sendMessage(Messages.getMessage(Message.PROMPT_START));
+            player.sendMessage(Message.PROMPT_START.get());
             plugin.chatPromptListener.put(player.getName(), s -> {
                 if (s.equalsIgnoreCase("#cancel")) return true;
                 if (!s.matches(plugin.itemActionCommandArgRegex)) {
-                    player.sendMessage(Messages.getMessage(Message.PROMPT_FAILED, player.getName(), s));
+                    player.sendMessage(Message.PROMPT_FAILED.get(player.getName(), s));
                     return false;
                 }
                 billboard.setCommandArg(s);
-                player.sendMessage(Messages.getMessage(Message.PROMPT_SUCCESS, player.getName(), s));
+                player.sendMessage(Message.PROMPT_SUCCESS.get(player.getName(), s));
                 plugin.saveBillboards();
                 return true;
             });

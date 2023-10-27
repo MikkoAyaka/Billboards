@@ -41,10 +41,10 @@ public class SignProtection implements Listener {
 		boolean breakFailed = false;
 		if (!player.isSneaking()) {
 			breakFailed = true;
-			player.sendMessage(Messages.getMessage(Message.YOU_HAVE_TO_SNEAK));
+			player.sendMessage(Message.YOU_HAVE_TO_SNEAK.get());
 		} else if (!billboard.canBreak(player)) {
 			breakFailed = true;
-			player.sendMessage(Messages.getMessage(Message.NO_PERMISSION));
+			player.sendMessage(Message.NO_PERMISSION.get());
 		}
 
 		if (breakFailed) {
@@ -57,7 +57,7 @@ public class SignProtection implements Listener {
 			// remove billboard:
 			plugin.removeBillboard(billboard);
 			plugin.saveBillboards();
-			player.sendMessage(Messages.getMessage(Message.SIGN_REMOVED));
+			player.sendMessage(Message.SIGN_REMOVED.get());
 		}
 	}
 }

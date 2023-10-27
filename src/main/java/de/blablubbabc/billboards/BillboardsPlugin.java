@@ -333,10 +333,10 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	private void setRentableText(BillboardSign billboard, Sign sign) {
 		String[] msgArgs = billboard.getMessageArgs();
 
-		sign.setLine(0, Messages.getMessage(Message.SIGN_LINE_1, msgArgs));
-		sign.setLine(1, Messages.getMessage(Message.SIGN_LINE_2, msgArgs));
-		sign.setLine(2, Messages.getMessage(Message.SIGN_LINE_3, msgArgs));
-		sign.setLine(3, Messages.getMessage(Message.SIGN_LINE_4, msgArgs));
+		sign.setLine(0, Message.SIGN_LINE_1.get(msgArgs));
+		sign.setLine(1, Message.SIGN_LINE_2.get(msgArgs));
+		sign.setLine(2, Message.SIGN_LINE_3.get(msgArgs));
+		sign.setLine(3, Message.SIGN_LINE_4.get(msgArgs));
 		sign.update();
 	}
 

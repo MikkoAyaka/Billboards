@@ -44,7 +44,7 @@ public class SignInteraction implements Listener {
 	}
 
 	public void onReloadMessages() {
-		dateFormat = new SimpleDateFormat(Messages.getMessage(Message.DATE_FORMAT));
+		dateFormat = new SimpleDateFormat(Message.DATE_FORMAT.get());
 	}
 
 	public void onPluginDisable() {
@@ -71,12 +71,12 @@ public class SignInteraction implements Listener {
 
 		// can rent?
 		if (!player.hasPermission(BillboardsPlugin.RENT_PERMISSION)) {
-			player.sendMessage(Messages.getMessage(Message.NO_PERMISSION));
+			player.sendMessage(Message.NO_PERMISSION.get());
 			return;
 		}
 		// own sign?
 		if (billboard.isCreator(player)) {
-			player.sendMessage(Messages.getMessage(Message.CANT_RENT_OWN_SIGN));
+			player.sendMessage(Message.CANT_RENT_OWN_SIGN.get());
 			return;
 		}
 
@@ -84,14 +84,14 @@ public class SignInteraction implements Listener {
 			// check if it's still available:
 			if (billboard.hasOwner()) {
 				// no longer available:
-				player.sendMessage(Messages.getMessage(Message.NO_LONGER_AVAILABLE));
+				player.sendMessage(Message.NO_LONGER_AVAILABLE.get());
 				return;
 			}
 
 			// check if player has enough money:
 			if (!BillboardsPlugin.economy.has(player, billboard.getPrice())) {
 				// not enough money:
-				player.sendMessage(Messages.getMessage(Message.NOT_ENOUGH_MONEY, String.valueOf(billboard.getPrice()), String.valueOf(BillboardsPlugin.economy.getBalance(player))));
+				player.sendMessage(Message.NOT_ENOUGH_MONEY.get(String.valueOf(billboard.getPrice()), String.valueOf(BillboardsPlugin.economy.getBalance(player))));
 				return;
 			}
 
@@ -101,7 +101,7 @@ public class SignInteraction implements Listener {
 			// transaction successful ?
 			if (!withdraw.transactionSuccess()) {
 				// something went wrong
-				player.sendMessage(Messages.getMessage(Message.TRANSACTION_FAILURE, withdraw.errorMessage));
+				player.sendMessage(Message.TRANSACTION_FAILURE.get(withdraw.errorMessage));
 				return;
 			}
 
@@ -114,13 +114,13 @@ public class SignInteraction implements Listener {
 				// transaction successful ?
 				if (!deposit.transactionSuccess()) {
 					// something went wrong :(
-					player.sendMessage(Messages.getMessage(Message.TRANSACTION_FAILURE, deposit.errorMessage));
+					player.sendMessage(Message.TRANSACTION_FAILURE.get(deposit.errorMessage));
 
 					// try to refund the withdraw
 					EconomyResponse withdrawUndo = BillboardsPlugin.economy.depositPlayer(player, withdraw.amount);
 					if (!withdrawUndo.transactionSuccess()) {
 						// this is really bad:
-						player.sendMessage(Messages.getMessage(Message.TRANSACTION_FAILURE, withdrawUndo.errorMessage));
+						player.sendMessage(Message.TRANSACTION_FAILURE.get(withdrawUndo.errorMessage));
 					}
 					player.updateInventory();
 					return;
@@ -136,33 +136,33 @@ public class SignInteraction implements Listener {
 			// initialize new sign text:
 			Sign sign = (Sign) clickedBlock.getState();
 			String[] msgArgs = billboard.getMessageArgs();
-			sign.setLine(0, Messages.getMessage(Message.RENT_SIGN_LINE_1, msgArgs));
-			sign.setLine(1, Messages.getMessage(Message.RENT_SIGN_LINE_2, msgArgs));
-			sign.setLine(2, Messages.getMessage(Message.RENT_SIGN_LINE_3, msgArgs));
-			sign.setLine(3, Messages.getMessage(Message.RENT_SIGN_LINE_4, msgArgs));
+			sign.setLine(0, Message.RENT_SIGN_LINE_1.get(msgArgs));
+			sign.setLine(1, Message.RENT_SIGN_LINE_2.get(msgArgs));
+			sign.setLine(2, Message.RENT_SIGN_LINE_3.get(msgArgs));
+			sign.setLine(3, Message.RENT_SIGN_LINE_4.get(msgArgs));
 			sign.update();
 
-			player.sendMessage(Messages.getMessage(Message.YOU_HAVE_RENT_A_SIGN, msgArgs));
+			player.sendMessage(Message.YOU_HAVE_RENT_A_SIGN.get(msgArgs));
 		} else {
 			// check if available:
 			if (!billboard.hasOwner()) {
 				// check if the player already owns to many billboards:
 				if (plugin.maxBillboardsPerPlayer >= 0 && plugin.getRentBillboards(player.getUniqueId()).size() >= plugin.maxBillboardsPerPlayer) {
-					player.sendMessage(Messages.getMessage(Message.MAX_RENT_LIMIT_REACHED, String.valueOf(plugin.maxBillboardsPerPlayer)));
+					player.sendMessage(Message.MAX_RENT_LIMIT_REACHED.get(String.valueOf(plugin.maxBillboardsPerPlayer)));
 					return;
 				}
 
 				// check if player has enough money:
 				if (!BillboardsPlugin.economy.has(player, billboard.getPrice())) {
 					// no enough money:
-					player.sendMessage(Messages.getMessage(Message.NOT_ENOUGH_MONEY, String.valueOf(billboard.getPrice()),
+					player.sendMessage(Message.NOT_ENOUGH_MONEY.get(String.valueOf(billboard.getPrice()),
 							String.valueOf(BillboardsPlugin.economy.getBalance(player))));
 					return;
 				}
 
 				// click again to rent:
 				confirmations.put(playerName, billboard);
-				player.sendMessage(Messages.getMessage(Message.CLICK_TO_RENT, billboard.getMessageArgs()));
+				player.sendMessage(Message.CLICK_TO_RENT.get(billboard.getMessageArgs()));
 			} else {
 				// is owner -> edit
 				if (billboard.canEdit(player)) {
@@ -186,23 +186,23 @@ public class SignInteraction implements Listener {
 
 	void printBillboard(Player player, BillboardSign billboard) {
 		// print information of sign:
-		player.sendMessage(Messages.getMessage(Message.INFO_HEADER));
-		player.sendMessage(Messages.getMessage(Message.INFO_CREATOR, billboard.getMessageCreatorName(), billboard.getMessageCreatorUUID()));
-		player.sendMessage(Messages.getMessage(Message.INFO_OWNER, billboard.getMessageOwnerName(), billboard.getMessageOwnerUUID()));
-		player.sendMessage(Messages.getMessage(Message.INFO_PRICE, String.valueOf(billboard.getPrice())));
-		player.sendMessage(Messages.getMessage(Message.INFO_DURATION, String.valueOf(billboard.getDurationInDays())));
-		player.sendMessage(Messages.getMessage(Message.INFO_RENT_SINCE, dateFormat.format(new Date(billboard.getStartTime()))));
+		player.sendMessage(Message.INFO_HEADER.get());
+		player.sendMessage(Message.INFO_CREATOR.get(billboard.getMessageCreatorName(), billboard.getMessageCreatorUUID()));
+		player.sendMessage(Message.INFO_OWNER.get(billboard.getMessageOwnerName(), billboard.getMessageOwnerUUID()));
+		player.sendMessage(Message.INFO_PRICE.get(String.valueOf(billboard.getPrice())));
+		player.sendMessage(Message.INFO_DURATION.get(String.valueOf(billboard.getDurationInDays())));
+		player.sendMessage(Message.INFO_RENT_SINCE.get(dateFormat.format(new Date(billboard.getStartTime()))));
 
 		long endTime = billboard.getEndTime();
-		player.sendMessage(Messages.getMessage(Message.INFO_RENT_UNTIL, dateFormat.format(new Date(endTime))));
+		player.sendMessage(Message.INFO_RENT_UNTIL.get(dateFormat.format(new Date(endTime))));
 
 		long left = billboard.getTimeLeft();
 		long days = TimeUnit.MILLISECONDS.toDays(left);
 		long hours = TimeUnit.MILLISECONDS.toHours(left) - TimeUnit.DAYS.toHours(days);
 		long minutes = TimeUnit.MILLISECONDS.toMinutes(left) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
-		String timeLeft = String.format(Messages.getMessage(Message.TIME_REMAINING_FORMAT), days, hours, minutes);
+		String timeLeft = String.format(Message.TIME_REMAINING_FORMAT.get(), days, hours, minutes);
 
-		player.sendMessage(Messages.getMessage(Message.INFO_TIME_LEFT, timeLeft));
+		player.sendMessage(Message.INFO_TIME_LEFT.get(timeLeft));
 	}
 
 	@EventHandler

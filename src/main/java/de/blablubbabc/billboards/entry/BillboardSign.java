@@ -220,7 +220,7 @@ public class BillboardSign {
 		if (this.hasCreator()) {
 			return Messages.getPlayerNameOrUnknown(lastKnownCreatorName);
 		} else {
-			return Messages.getMessage(Message.SERVER_OWNER_NAME);
+			return Message.SERVER_OWNER_NAME.get();
 		}
 	}
 
@@ -232,7 +232,7 @@ public class BillboardSign {
 		if (this.hasOwner()) {
 			return Messages.getPlayerNameOrUnknown(lastKnownOwnerName);
 		} else {
-			return Messages.getMessage(Message.SERVER_OWNER_NAME);
+			return Message.SERVER_OWNER_NAME.get();
 		}
 	}
 }

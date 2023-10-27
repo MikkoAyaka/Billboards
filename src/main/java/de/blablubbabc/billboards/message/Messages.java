@@ -113,7 +113,7 @@ public class Messages {
 	}
 
 	// gets a message from memory
-	public static String getMessage(Message messageID, String... args) {
+	public static String getMessage(Message messageID, String[] args) {
 		String message = messages[messageID.ordinal()];
 		for (int i = 0; i < args.length; i++) {
 			String param = args[i];
@@ -123,10 +123,10 @@ public class Messages {
 	}
 
 	public static String getPlayerNameOrUnknown(String playerName) {
-		return playerName != null ? playerName : getMessage(Message.UNKNOWN_NAME);
+		return playerName != null ? playerName : Message.UNKNOWN_NAME.get();
 	}
 
 	public static String getUUIDStringOrUnknown(UUID uuid) {
-		return uuid != null ? uuid.toString() : getMessage(Message.UNKNOWN_UUID);
+		return uuid != null ? uuid.toString() : Message.UNKNOWN_UUID.get();
 	}
 }

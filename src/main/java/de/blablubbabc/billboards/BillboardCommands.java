@@ -24,7 +24,7 @@ public class BillboardCommands implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (!(sender instanceof Player)) {
-			sender.sendMessage(Messages.getMessage(Message.ONLY_AS_PLAYER));
+			sender.sendMessage(Message.ONLY_AS_PLAYER.get());
 			return true;
 		}
 		Player player = (Player) sender;
@@ -32,13 +32,13 @@ public class BillboardCommands implements CommandExecutor {
 		// check permission:
 		boolean hasAdminPermission = player.hasPermission(BillboardsPlugin.ADMIN_PERMISSION);
 		if (!hasAdminPermission && !player.hasPermission(BillboardsPlugin.CREATE_PERMISSION)) {
-			player.sendMessage(Messages.getMessage(Message.NO_PERMISSION));
+			player.sendMessage(Message.NO_PERMISSION.get());
 			return true;
 		}
 		if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
 			plugin.reloadMessages();
 			plugin.reloadConfig();
-			player.sendMessage(Messages.getMessage(Message.RELOADED));
+			player.sendMessage(Message.RELOADED.get());
 			return true;
 		}
 		if (args.length > 3) {
@@ -48,14 +48,14 @@ public class BillboardCommands implements CommandExecutor {
 		// get targeted sign:
 		Block targetBlock = player.getTargetBlock(null, 10);
 		if (!Utils.isSign(targetBlock.getType())) {
-			player.sendMessage(Messages.getMessage(Message.NO_TARGETED_SIGN));
+			player.sendMessage(Message.NO_TARGETED_SIGN.get());
 			return true;
 		}
 		SoftBlockLocation blockLocation = new SoftBlockLocation(targetBlock);
 
 		// already a billboard sign?
 		if (plugin.getBillboard(blockLocation) != null) {
-			player.sendMessage(Messages.getMessage(Message.ALREADY_BILLBOARD_SIGN));
+			player.sendMessage(Message.ALREADY_BILLBOARD_SIGN.get());
 			return true;
 		}
 
@@ -67,12 +67,12 @@ public class BillboardCommands implements CommandExecutor {
 		if (args.length >= 2) {
 			Integer priceArgument = Utils.parseInteger(args[0]);
 			if (priceArgument == null) {
-				player.sendMessage(Messages.getMessage(Message.INVALID_NUMBER, args[0]));
+				player.sendMessage(Message.INVALID_NUMBER.get(args[0]));
 				return true;
 			}
 			Integer durationArgument = Utils.parseInteger(args[1]);
 			if (durationArgument == null) {
-				player.sendMessage(Messages.getMessage(Message.INVALID_NUMBER, args[1]));
+				player.sendMessage(Message.INVALID_NUMBER.get(args[1]));
 				return true;
 			}
 			price = priceArgument;
@@ -82,14 +82,14 @@ public class BillboardCommands implements CommandExecutor {
 		Player creator = hasAdminPermission ? null : player;
 		if (args.length == 1 || args.length == 3) {
 			if (!hasAdminPermission) {
-				player.sendMessage(Messages.getMessage(Message.NO_PERMISSION));
+				player.sendMessage(Message.NO_PERMISSION.get());
 				return true;
 			}
 			String creatorName = args[args.length == 1 ? 0 : 2];
 			// TODO support offline players
 			creator = Bukkit.getPlayer(creatorName);
 			if (creator == null) {
-				player.sendMessage(Messages.getMessage(Message.PLAYER_NOT_FOUND, creatorName));
+				player.sendMessage(Message.PLAYER_NOT_FOUND.get(creatorName));
 				return true;
 			}
 		}
@@ -101,7 +101,7 @@ public class BillboardCommands implements CommandExecutor {
 		plugin.saveBillboards();
 
 		String[] msgArgs = billboard.getMessageArgs();
-		player.sendMessage(Messages.getMessage(Message.ADDED_SIGN, msgArgs));
+		player.sendMessage(Message.ADDED_SIGN.get(msgArgs));
 		return true;
 	}
 }
