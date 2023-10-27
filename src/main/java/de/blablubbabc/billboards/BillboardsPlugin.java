@@ -67,9 +67,9 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	private final Collection<BillboardSign> billboardsView = Collections.unmodifiableCollection(billboards.values());
 
 	// controllers:
-	final SignInteraction signInteration = new SignInteraction(this);
 	final SignProtection signProtection = new SignProtection(this);
 	final SignEditing signEditing = new SignEditing(this);
+	public final SignInteraction signInteraction = new SignInteraction(this);
 
 	private GuiManager guiManager = null;
 
@@ -94,7 +94,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		// initialize controllers:
 		Bukkit.getPluginManager().registerEvents(this, this);
 		this.guiManager = new GuiManager(this);
-		signInteration.onPluginEnable();
+		signInteraction.onPluginEnable();
 		signProtection.onPluginEnable();
 		signEditing.onPluginEnable();
 
@@ -109,7 +109,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	@Override
 	public void onDisable() {
 		// inform controllers:
-		signInteration.onPluginDisable();
+		signInteraction.onPluginDisable();
 		signProtection.onPluginDisable();
 		signEditing.onPluginDisable();
 
@@ -123,6 +123,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 
 	public void reloadMessages() {
 		Messages.loadMessages(new File(getDataFolder(), "messages.yml"), this.getLogger());
+		signInteraction.onReloadMessages();
 	}
 
 	@Override

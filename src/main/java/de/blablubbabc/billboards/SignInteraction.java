@@ -37,8 +37,11 @@ public class SignInteraction implements Listener {
 	}
 
 	void onPluginEnable() {
-		dateFormat = new SimpleDateFormat(Messages.getMessage(Message.DATE_FORMAT));
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	}
+
+	void onReloadMessages() {
+		dateFormat = new SimpleDateFormat(Messages.getMessage(Message.DATE_FORMAT));
 	}
 
 	void onPluginDisable() {
