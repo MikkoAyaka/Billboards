@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import de.blablubbabc.billboards.gui.GuiSignEdit;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
@@ -159,7 +160,7 @@ public class SignInteraction implements Listener {
 			} else {
 				// is owner -> edit
 				if (player.isSneaking() && billboard.canEdit(player)) {
-					plugin.signEditing.openSignEdit(player, billboard);
+					plugin.getGuiManager().openGui(new GuiSignEdit(plugin.signEditing, player, billboard));
 					return;
 				}
 
