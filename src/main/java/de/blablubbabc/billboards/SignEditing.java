@@ -118,15 +118,11 @@ public class SignEditing implements Listener {
 			e.printStackTrace();
 		}
 		editing.put(player.getName(), new SignEdit(billboard, location));
-		player.sendMessage("§7你正在编辑广告牌");
 	}
 
 	// returns null if the player was editing
 	public SignEdit endSignEdit(Player player) {
 		SignEdit sign = editing.remove(player.getName());
-		if (sign != null) {
-			player.sendMessage("§7结束编辑");
-		}
 		return sign;
 	}
 
