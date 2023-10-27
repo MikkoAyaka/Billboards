@@ -42,7 +42,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 
 	private static BillboardsPlugin instance;
 
-	public BillboardsPlugin getInstance() {
+	public static BillboardsPlugin getInstance() {
 		return instance;
 	}
 
@@ -71,6 +71,8 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	final SignProtection signProtection = new SignProtection(this);
 	final SignEditing signEditing = new SignEditing(this);
 
+	private GuiManager guiManager = null;
+
 	@Override
 	public void onEnable() {
 		instance = this;
@@ -91,6 +93,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 
 		// initialize controllers:
 		Bukkit.getPluginManager().registerEvents(this, this);
+		this.guiManager = new GuiManager(this);
 		signInteration.onPluginEnable();
 		signProtection.onPluginEnable();
 		signEditing.onPluginEnable();
@@ -109,6 +112,8 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		signInteration.onPluginDisable();
 		signProtection.onPluginDisable();
 		signEditing.onPluginDisable();
+
+		if (guiManager != null) guiManager.onDisable();
 
 		Bukkit.getScheduler().cancelTasks(this);
 		instance = null;
@@ -396,6 +401,10 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 			return false;
 		}
 		return true;
+	}
+
+	public GuiManager getGuiManager() {
+		return guiManager;
 	}
 
 	private static String getUUIDString(UUID uuid) {
