@@ -69,11 +69,13 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	public int defaultPrice = 10;
 	public int defaultDurationInDays = 7;
 	public int maxBillboardsPerPlayer = -1; // no limit by default
+	public String editSignTitle;
 	public Material itemActionMaterial;
 	public int itemActionSlot;
 	public String itemActionName;
 	public List<String> itemActionLore;
 	public String itemActionCommand;
+	public String itemActionCommandArgRegex;
 	public Material itemEditSignMaterial;
 	public int itemEditSignSlot;
 	public String itemEditSignName;
@@ -151,6 +153,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		defaultDurationInDays = config.getInt("default-duration-in-days", 7);
 		maxBillboardsPerPlayer = config.getInt("max-billboards-per-player", -1);
 
+		editSignTitle = config.getString("edit-sign-title", "Edit Billboard");
 		itemActionMaterial = Utils.parseMat(config.getString("items.action.material")).orElse(Material.ARROW);
 		itemActionSlot = config.getInt("items.action.slot", 0);
 		itemActionName = config.getString("items.action.name", "&e&lEdit Click Action");
@@ -165,6 +168,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 			itemActionLore = config.getStringList("items.action.lore");
 		}
 		itemActionCommand = config.getString("items.action.command", "player:res tp %s");
+		itemActionCommandArgRegex = config.getString("items.action.command-arg-regex", "[^A-Za-z0-9\\u4e00-\\u9fa5\\-\\_]");
 		itemEditSignMaterial = Utils.parseMat(config.getString("items.edit-sign.material")).orElse(Material.OAK_SIGN);
 		itemEditSignSlot = config.getInt("items.edit-sign.slot", 1);
 		itemEditSignName = config.getString("items.edit-sign.name", "&e&lEdit Sign Content");
@@ -190,10 +194,12 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		config.set("default-duration-in-days", defaultDurationInDays);
 		config.set("max-billboards-per-player", maxBillboardsPerPlayer);
 
+		config.set("edit-sign-title", editSignTitle);
 		config.set("items.action.material", itemActionMaterial.name());
 		config.set("items.action.name", itemActionName);
 		config.set("items.action.lore", itemActionLore);
 		config.set("items.action.command", itemActionCommand);
+		config.set("items.action.command-arg-regex", itemActionCommandArgRegex);
 		config.set("items.edit-sign.material", itemEditSignMaterial.name());
 		config.set("items.edit-sign.name", itemEditSignName);
 		config.set("items.edit-sign.lore", itemEditSignLore);
