@@ -1,6 +1,7 @@
 package de.blablubbabc.billboards.gui;
 
 import de.blablubbabc.billboards.BillboardSign;
+import de.blablubbabc.billboards.BillboardsPlugin;
 import de.blablubbabc.billboards.SignEditing;
 import de.blablubbabc.billboards.util.Items;
 import org.bukkit.Bukkit;
@@ -12,11 +13,11 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 public class GuiSignEdit implements IGui {
-    SignEditing editing;
+    BillboardsPlugin plugin;
     Player player;
     BillboardSign billboard;
-    public GuiSignEdit(SignEditing editing, Player player, BillboardSign billboard) {
-        this.editing = editing;
+    public GuiSignEdit(BillboardsPlugin plugin, Player player, BillboardSign billboard) {
+        this.plugin = plugin;
         this.player = player;
         this.billboard = billboard;
     }
@@ -28,17 +29,12 @@ public class GuiSignEdit implements IGui {
     @Override
     public Inventory newInventory() {
         Inventory inv = Bukkit.createInventory(null, 9, "编辑广告牌");
-        ItemStack itemAction = Items.buildItem(Material.ARROW, "&e&l编辑点击操作",
-                "",
-                "&f  其它人右键点击广告牌时  ",
-                "&f  传送到的领地  ",
-                "");
-        ItemStack itemEditSign = Items.buildItem(Material.OAK_SIGN, "&e&l编辑内容",
-                "",
-                "&f  编辑告示牌内容  ",
-                "");
+
+        ItemStack itemAction = Items.buildItem(plugin.itemActionMaterial, plugin.itemActionName, plugin.itemActionLore);
+        ItemStack itemEditSign = Items.buildItem(plugin.itemEditSignMaterial, plugin.itemEditSignName, plugin.itemEditSignLore);
         inv.setItem(0, itemAction);
         inv.setItem(1, itemEditSign);
+
         return inv;
     }
 
@@ -48,7 +44,7 @@ public class GuiSignEdit implements IGui {
 
         }
         if (slot == 1) {
-            editing.openSignEdit(player, billboard);
+            plugin.signEditing.openSignEdit(player, billboard);
         }
         event.setCancelled(true);
     }

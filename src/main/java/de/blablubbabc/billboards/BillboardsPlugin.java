@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -61,15 +62,23 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	public int defaultPrice = 10;
 	public int defaultDurationInDays = 7;
 	public int maxBillboardsPerPlayer = -1; // no limit by default
-
+	public Material itemActionMaterial;
+	public int itemActionSlot;
+	public String itemActionName;
+	public List<String> itemActionLore;
+	public String itemActionCommand;
+	public Material itemEditSignMaterial;
+	public int itemEditSignSlot;
+	public String itemEditSignName;
+	public List<String> itemEditSignLore;
 	// data:
 	private final Map<SoftBlockLocation, BillboardSign> billboards = new LinkedHashMap<>();
 	private final Collection<BillboardSign> billboardsView = Collections.unmodifiableCollection(billboards.values());
 
 	// controllers:
-	final SignProtection signProtection = new SignProtection(this);
-	final SignEditing signEditing = new SignEditing(this);
 	public final SignInteraction signInteraction = new SignInteraction(this);
+	public final SignProtection signProtection = new SignProtection(this);
+	public final SignEditing signEditing = new SignEditing(this);
 
 	private GuiManager guiManager = null;
 
@@ -134,6 +143,34 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		defaultPrice = config.getInt("default-price", 10);
 		defaultDurationInDays = config.getInt("default-duration-in-days", 7);
 		maxBillboardsPerPlayer = config.getInt("max-billboards-per-player", -1);
+
+		itemActionMaterial = Utils.parseMat(config.getString("items.action.material")).orElse(Material.ARROW);
+		itemActionSlot = config.getInt("items.action.slot", 0);
+		itemActionName = config.getString("items.action.name", "&e&lEdit Click Action");
+		if (!config.contains("items.action.lore")) {
+			itemActionLore = Lists.newArrayList(
+					"",
+					"&f  Edit the residence to teleport  ",
+					"&f  when someone click the sign.  ",
+					""
+			);
+		} else {
+			itemActionLore = config.getStringList("items.action.lore");
+		}
+		itemActionCommand = config.getString("items.action.command", "player:res tp %s");
+		itemEditSignMaterial = Utils.parseMat(config.getString("items.edit-sign.material")).orElse(Material.OAK_SIGN);
+		itemEditSignSlot = config.getInt("items.edit-sign.slot", 1);
+		itemEditSignName = config.getString("items.edit-sign.name", "&e&lEdit Sign Content");
+		if (!config.contains("items.edit-sign.lore")) {
+			itemEditSignLore = Lists.newArrayList(
+					"",
+					"&f  Edit the text on the sign.  ",
+					""
+			);
+		} else {
+			itemEditSignLore = config.getStringList("items.edit-sign.lore");
+		}
+
 		// write changes back to config:
 		this.saveConfig();
 	}
@@ -145,6 +182,15 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		config.set("default-price", defaultPrice);
 		config.set("default-duration-in-days", defaultDurationInDays);
 		config.set("max-billboards-per-player", maxBillboardsPerPlayer);
+
+		config.set("items.action.material", itemActionMaterial.name());
+		config.set("items.action.name", itemActionName);
+		config.set("items.action.lore", itemActionLore);
+		config.set("items.action.command", itemActionCommand);
+		config.set("items.edit-sign.material", itemEditSignMaterial.name());
+		config.set("items.edit-sign.name", itemEditSignName);
+		config.set("items.edit-sign.lore", itemEditSignLore);
+
 		super.saveConfig();
 	}
 

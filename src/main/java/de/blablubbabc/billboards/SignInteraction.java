@@ -163,7 +163,7 @@ public class SignInteraction implements Listener {
 			} else {
 				// is owner -> edit
 				if (player.isSneaking() && billboard.canEdit(player)) {
-					plugin.getGuiManager().openGui(new GuiSignEdit(plugin.signEditing, player, billboard));
+					plugin.getGuiManager().openGui(new GuiSignEdit(plugin, player, billboard));
 					return;
 				}
 

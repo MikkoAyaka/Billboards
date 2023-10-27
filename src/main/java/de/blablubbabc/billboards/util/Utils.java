@@ -1,10 +1,22 @@
 package de.blablubbabc.billboards.util;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.Material;
 
 public class Utils {
+
+	public static Optional<Material> parseMat(String s) {
+		if (s != null && !s.isEmpty()) {
+			for (Material m : Material.values()) {
+				if (m.name().equalsIgnoreCase(s)) {
+					return Optional.of(m);
+				}
+			}
+		}
+		return Optional.empty();
+	}
 
 	public static boolean isEmpty(String string) {
 		return (string == null || string.isEmpty());
