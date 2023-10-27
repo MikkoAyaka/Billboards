@@ -114,10 +114,10 @@ public class SignEditing implements Listener {
 		openSign.getBlockPositionModifier().write(0, position);
 		try {
 			ProtocolLibrary.getProtocolManager().sendServerPacket(player, openSign);
+			editing.put(player.getName(), new SignEdit(billboard, location));
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
-		editing.put(player.getName(), new SignEdit(billboard, location));
 	}
 
 	// returns null if the player was editing
