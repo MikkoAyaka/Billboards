@@ -1,6 +1,6 @@
 package de.blablubbabc.billboards;
 
-enum Message {
+public enum Message {
 
 	UNKNOWN_NAME,
 	UNKNOWN_UUID,
@@ -40,4 +40,8 @@ enum Message {
 	RENT_SIGN_LINE_3,
 	RENT_SIGN_LINE_4,
 	RELOADED;
+
+	public String get(String... args) {
+		return Messages.getMessage(this, args);
+	}
 }

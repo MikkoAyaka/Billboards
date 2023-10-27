@@ -1,6 +1,6 @@
 package de.blablubbabc.billboards;
 
-class CustomizableMessage {
+public class CustomizableMessage {
 
 	Message id;
 	String text;

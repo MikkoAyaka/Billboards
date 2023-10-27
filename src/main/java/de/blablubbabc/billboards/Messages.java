@@ -11,7 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-class Messages {
+public class Messages {
 
 	private static String[] messages;
 
