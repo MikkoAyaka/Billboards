@@ -9,6 +9,8 @@ description: Rent-able signs.
 depend:
   - Vault
   - ProtocolLib
+softdepend:
+  - PlaceholderAPI
 commands:
   billboard:
     description: Used to add a sign.

@@ -22,17 +22,17 @@ public class BillboardSign {
 	private int durationInDays;
 	private int price;
 	private long startTime;
-
+	private String commandArg;
 	private boolean valid = false;
 
 	// shortcut: used when creating a new billboard, creator is null if owned by the server
 	public BillboardSign(SoftBlockLocation location, Player creator, int durationInDays, int price) {
-		this(location, (creator != null ? creator.getUniqueId() : null), (creator != null ? creator.getName() : null), null, null, durationInDays, price, 0);
+		this(location, (creator != null ? creator.getUniqueId() : null), (creator != null ? creator.getName() : null), null, null, durationInDays, price, 0, "");
 	}
 
 	// full: used when loading billboards
 	public BillboardSign(	SoftBlockLocation location, UUID creatorUUID, String lastKnownCreatorName,
-							UUID ownerUUID, String lastKnownOwnerName, int durationInDays, int price, long startTime) {
+							UUID ownerUUID, String lastKnownOwnerName, int durationInDays, int price, long startTime, String commandArg) {
 		Validate.notNull(location, "Location is null!");
 		this.location = location;
 		if (creatorUUID == null) {
@@ -49,6 +49,7 @@ public class BillboardSign {
 		this.durationInDays = durationInDays;
 		this.price = price;
 		this.startTime = startTime;
+		this.commandArg = commandArg;
 	}
 
 	public boolean isValid() {
@@ -166,6 +167,14 @@ public class BillboardSign {
 
 	public void setStartTime(long startTime) {
 		this.startTime = startTime;
+	}
+
+	public String getCommandArg() {
+		return commandArg;
+	}
+
+	public void setCommandArg(String commandArg) {
+		this.commandArg = commandArg;
 	}
 
 	public long getEndTime() {

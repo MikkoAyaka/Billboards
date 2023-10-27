@@ -165,31 +165,44 @@ public class SignInteraction implements Listener {
 				player.sendMessage(Messages.getMessage(Message.CLICK_TO_RENT, billboard.getMessageArgs()));
 			} else {
 				// is owner -> edit
-				if (player.isSneaking() && billboard.canEdit(player)) {
-					plugin.getGuiManager().openGui(new GuiSignEdit(plugin, player, billboard));
-					return;
+				if (billboard.canEdit(player)) {
+					if (player.isSneaking()) {
+						plugin.getGuiManager().openGui(new GuiSignEdit(plugin, player, billboard));
+					} else {
+						printBillboard(player, billboard);
+					}
+				} else if (!billboard.getCommandArg().isEmpty()) {
+					if (player.isSneaking()) {
+						printBillboard(player, billboard);
+					} else {
+						Utils.runCommand(player, plugin.itemActionCommand, billboard.getCommandArg());
+					}
+				} else {
+					printBillboard(player, billboard);
 				}
-
-				// print information of sign:
-				player.sendMessage(Messages.getMessage(Message.INFO_HEADER));
-				player.sendMessage(Messages.getMessage(Message.INFO_CREATOR, billboard.getMessageCreatorName(), billboard.getMessageCreatorUUID()));
-				player.sendMessage(Messages.getMessage(Message.INFO_OWNER, billboard.getMessageOwnerName(), billboard.getMessageOwnerUUID()));
-				player.sendMessage(Messages.getMessage(Message.INFO_PRICE, String.valueOf(billboard.getPrice())));
-				player.sendMessage(Messages.getMessage(Message.INFO_DURATION, String.valueOf(billboard.getDurationInDays())));
-				player.sendMessage(Messages.getMessage(Message.INFO_RENT_SINCE, dateFormat.format(new Date(billboard.getStartTime()))));
-
-				long endTime = billboard.getEndTime();
-				player.sendMessage(Messages.getMessage(Message.INFO_RENT_UNTIL, dateFormat.format(new Date(endTime))));
-
-				long left = billboard.getTimeLeft();
-				long days = TimeUnit.MILLISECONDS.toDays(left);
-				long hours = TimeUnit.MILLISECONDS.toHours(left) - TimeUnit.DAYS.toHours(days);
-				long minutes = TimeUnit.MILLISECONDS.toMinutes(left) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
-				String timeLeft = String.format(Messages.getMessage(Message.TIME_REMAINING_FORMAT), days, hours, minutes);
-
-				player.sendMessage(Messages.getMessage(Message.INFO_TIME_LEFT, timeLeft));
 			}
 		}
+	}
+
+	void printBillboard(Player player, BillboardSign billboard) {
+		// print information of sign:
+		player.sendMessage(Messages.getMessage(Message.INFO_HEADER));
+		player.sendMessage(Messages.getMessage(Message.INFO_CREATOR, billboard.getMessageCreatorName(), billboard.getMessageCreatorUUID()));
+		player.sendMessage(Messages.getMessage(Message.INFO_OWNER, billboard.getMessageOwnerName(), billboard.getMessageOwnerUUID()));
+		player.sendMessage(Messages.getMessage(Message.INFO_PRICE, String.valueOf(billboard.getPrice())));
+		player.sendMessage(Messages.getMessage(Message.INFO_DURATION, String.valueOf(billboard.getDurationInDays())));
+		player.sendMessage(Messages.getMessage(Message.INFO_RENT_SINCE, dateFormat.format(new Date(billboard.getStartTime()))));
+
+		long endTime = billboard.getEndTime();
+		player.sendMessage(Messages.getMessage(Message.INFO_RENT_UNTIL, dateFormat.format(new Date(endTime))));
+
+		long left = billboard.getTimeLeft();
+		long days = TimeUnit.MILLISECONDS.toDays(left);
+		long hours = TimeUnit.MILLISECONDS.toHours(left) - TimeUnit.DAYS.toHours(days);
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(left) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
+		String timeLeft = String.format(Messages.getMessage(Message.TIME_REMAINING_FORMAT), days, hours, minutes);
+
+		player.sendMessage(Messages.getMessage(Message.INFO_TIME_LEFT, timeLeft));
 	}
 
 	@EventHandler
