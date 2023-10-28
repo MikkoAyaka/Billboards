@@ -25,13 +25,13 @@ permissions:
     default: false
   billboards.sign.color:
     description: Can use color code on signs.
-    default: false
+    default: op
   billboards.sign.format:
     description: Can use format code on signs.
-    default: false
+    default: op
   billboards.sign.format.magic:
     description: Can use magic code (§k) on signs.
-    default: false
+    default: op
   billboards.admin:
     description: Can add and remove all billboard signs.
     default: op
