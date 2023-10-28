@@ -102,3 +102,11 @@ RENT_SIGN_LINE_4:
   Notes: '0: 价格  1: 租用时间(天)  2: 创建者  3: 创建者 uuid  4: 租用者  5: 租用者 uuid'
 RELOADED:
   Text: '&b&lBillboards &7>> &a配置文件和语言已重载'
+PROMPT_START:
+  Text: '&7[&b广告牌&7] &e请在聊天栏发送领地名. 发送 &f#cancel &e代表取消该操作'
+PROMPT_FAILED:
+  Text: '&7[&b广告牌&7] &e你输入的领地名无效， 请重新发送'
+  Notes: '0: 玩家名  1: 玩家输入的参数'
+PROMPT_SUCCESS:
+  Text: '&7[&b广告牌&7] &a你已成功设置广告牌点击操作'
+  Notes: '0: 玩家名  1: 玩家输入的参数'
