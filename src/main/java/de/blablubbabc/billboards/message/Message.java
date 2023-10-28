@@ -45,6 +45,11 @@ public enum Message {
 	PROMPT_SUCCESS;
 
 	public String get(String... args) {
-		return Messages.getMessage(this, args);
+		String message = Messages.getMessage(this);
+		for (int i = 0; i < args.length; i++) {
+			String param = args[i];
+			message = message.replace("{" + i + "}", param);
+		}
+		return message;
 	}
 }

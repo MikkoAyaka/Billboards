@@ -113,13 +113,8 @@ public class Messages {
 	}
 
 	// gets a message from memory
-	public static String getMessage(Message messageID, String[] args) {
-		String message = messages[messageID.ordinal()];
-		for (int i = 0; i < args.length; i++) {
-			String param = args[i];
-			message = message.replace("{" + i + "}", param);
-		}
-		return message;
+	public static String getMessage(Message messageID) {
+		return messages[messageID.ordinal()];
 	}
 
 	public static String getPlayerNameOrUnknown(String playerName) {
