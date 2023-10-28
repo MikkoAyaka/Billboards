@@ -168,7 +168,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 			itemActionLore = config.getStringList("items.action.lore");
 		}
 		itemActionCommand = config.getString("items.action.command", "player:res tp %s");
-		itemActionCommandArgRegex = config.getString("items.action.command-arg-regex", "[^A-Za-z0-9\\u4e00-\\u9fa5\\-\\_]");
+		itemActionCommandArgRegex = config.getString("items.action.command-arg-regex", "^[A-Za-z0-9\\u4e00-\\u9fa5\\-_.]+");
 		itemEditSignMaterial = Utils.parseMat(config.getString("items.edit-sign.material")).orElse(Material.OAK_SIGN);
 		itemEditSignSlot = config.getInt("items.edit-sign.slot", 1);
 		itemEditSignName = config.getString("items.edit-sign.name", "&e&lEdit Sign Content");
