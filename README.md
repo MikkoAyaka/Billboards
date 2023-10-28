@@ -5,9 +5,11 @@ Billboards gives you the possibility to setup rentable signs. You could for exam
 ## What's changed in fork version
 
 * Use Gradle.
-* Depend on ProtocolLib, no longer need to held a sign to edit.
+* Depend on ProtocolLib, no longer need to hold a sign to edit.
 * Add format code (`&`->`§`) support with permissions.
 * You can reload configurations and messages by command.
+* Add sign edit GUI.
+* Add sign click action. (set `items.action.command` in `config.yml` to empty to disable the function)
 
 ## Step by step walk-through
 

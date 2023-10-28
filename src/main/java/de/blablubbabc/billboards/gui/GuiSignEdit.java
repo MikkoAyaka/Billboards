@@ -41,7 +41,7 @@ public class GuiSignEdit implements IGui {
 
     @Override
     public void onClick(InventoryAction action, ClickType click, InventoryType.SlotType slotType, int slot, ItemStack currentItem, ItemStack cursor, InventoryView view, InventoryClickEvent event) {
-        if (slot == 0) {
+        if (slot == 0 && !plugin.itemActionCommand.isEmpty()) {
             player.closeInventory();
 
             player.sendMessage(Message.PROMPT_START.get());
