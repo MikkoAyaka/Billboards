@@ -110,3 +110,6 @@ PROMPT_FAILED:
 PROMPT_SUCCESS:
   Text: '&7[&b广告牌&7] &a你已成功设置广告牌点击操作'
   Notes: '0: 玩家名  1: 玩家输入的参数'
+PROMPT_CANCELLED:
+  Text: '&7[&b广告牌&7] &f参数补全已取消'
+  Notes: '0: 玩家名'

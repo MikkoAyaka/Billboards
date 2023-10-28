@@ -42,7 +42,8 @@ public enum Message {
 	RELOADED,
 	PROMPT_START,
 	PROMPT_FAILED,
-	PROMPT_SUCCESS;
+	PROMPT_SUCCESS,
+	PROMPT_CANCELLED;
 
 	public String get(String... args) {
 		String message = Messages.getMessage(this);

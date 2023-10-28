@@ -67,6 +67,7 @@ public class Messages {
 		addDefault(defaults, Message.PROMPT_START, "&7[&bBillboards&7] &ePlease send your residence name via game chat. Send &f#cancel &emeans cancel the process.", null);
 		addDefault(defaults, Message.PROMPT_FAILED, "&7[&bBillboards&7] &eThe name you input is invalid. Please send again.", "0: player name  1: what player input");
 		addDefault(defaults, Message.PROMPT_SUCCESS, "&7[&bBillboards&7] &aYou have been set the click action of your Billboard", "0: player name  1: what player input");
+		addDefault(defaults, Message.PROMPT_CANCELLED, "&7[&bBillboards&7] &fPrompt cancelled", "0: player name");
 
 		// load the message file
 		FileConfiguration config = YamlConfiguration.loadConfiguration(messagesFile);

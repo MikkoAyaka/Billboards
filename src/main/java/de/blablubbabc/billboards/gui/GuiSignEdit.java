@@ -46,7 +46,10 @@ public class GuiSignEdit implements IGui {
 
             player.sendMessage(Message.PROMPT_START.get());
             plugin.chatPromptListener.put(player.getName(), s -> {
-                if (s.equalsIgnoreCase("#cancel")) return true;
+                if (s.equalsIgnoreCase("#cancel")) {
+                    player.sendMessage(Message.PROMPT_CANCELLED.get(player.getName()));
+                    return true;
+                }
                 if (!s.matches(plugin.itemActionCommandArgRegex)) {
                     player.sendMessage(Message.PROMPT_FAILED.get(player.getName(), s));
                     return false;

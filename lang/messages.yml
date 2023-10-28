@@ -118,3 +118,6 @@ PROMPT_FAILED:
 PROMPT_SUCCESS:
   Text: '&7[&bBillboards&7] &aYou have been set the click action of your Billboard'
   Notes: '0: player name  1: what player input'
+PROMPT_CANCELLED:
+  Text: '&7[&bBillboards&7] &fPrompt cancelled'
+  Notes: '0: player name'
