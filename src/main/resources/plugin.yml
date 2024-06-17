@@ -11,6 +11,7 @@ depend:
   - ProtocolLib
 softdepend:
   - PlaceholderAPI
+load: STARTUP
 commands:
   billboard:
     description: Used to add a sign.

@@ -35,6 +35,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -92,9 +93,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	@Override
 	public void onEnable() {
 		instance = this;
-		if (!setupEconomy()) {
-			this.getLogger().severe("No economy plugin was found! Disables now!");
-			Bukkit.getPluginManager().disablePlugin(this);
+		if (!Bukkit.getOnlinePlayers().isEmpty() && !setupEconomy()) {
 			return;
 		}
 
@@ -210,11 +209,22 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	// SETUP
 
 	private boolean setupEconomy() {
+		if (economy != null) return true;
 		RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 		if (economyProvider != null) {
 			economy = economyProvider.getProvider();
 		}
-		return (economy != null);
+		if (economy == null) {
+			this.getLogger().severe("No economy plugin was found! Disables now!");
+			Bukkit.getPluginManager().disablePlugin(this);
+			return false;
+		}
+		return true;
+	}
+
+	@EventHandler
+	public void onServerLoaded(ServerLoadEvent event) {
+		setupEconomy();
 	}
 
 	// BILLBOARDS
