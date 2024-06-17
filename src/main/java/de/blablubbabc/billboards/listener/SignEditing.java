@@ -75,7 +75,7 @@ public class SignEditing implements Listener {
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			this.endSignEdit(player);
 		}
-		protocolManager.removePacketListeners(plugin);
+		if (protocolManager != null) protocolManager.removePacketListeners(plugin);
 	}
 	public String[] encodeColor(String[] lines, Player player) {
 		boolean color = player == null || player.hasPermission(BillboardsPlugin.SIGN_COLOR_PERMISSION);
