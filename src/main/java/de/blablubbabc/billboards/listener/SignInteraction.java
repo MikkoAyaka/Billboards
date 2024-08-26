@@ -30,7 +30,7 @@ public class SignInteraction implements Listener {
 
 	private final BillboardsPlugin plugin;
 	// player name -> currently interacting billboard sign
-	public final Map<String, BillboardSign> confirmations = new HashMap<String, BillboardSign>();
+	public final Map<String, BillboardSign> confirmations = new HashMap<>();
 	private SimpleDateFormat dateFormat;
 
 	public SignInteraction(BillboardsPlugin plugin) {
@@ -58,7 +58,7 @@ public class SignInteraction implements Listener {
 
 		// reset confirmation status:
 		BillboardSign confirmationBillboard = confirmations.remove(playerName);
-		if (!Utils.isSign(clickedBlock.getType())) return; // not a sign
+		if (Utils.isNotSign(clickedBlock.getType())) return; // not a sign
 
 		SoftBlockLocation blockLocation = new SoftBlockLocation(clickedBlock);
 		BillboardSign billboard = plugin.getBillboard(blockLocation);

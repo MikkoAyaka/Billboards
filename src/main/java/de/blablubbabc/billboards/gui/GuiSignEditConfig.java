@@ -21,12 +21,12 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class GuiSignEditConfig {
-    BillboardsPlugin plugin;
+    private final BillboardsPlugin plugin;
     private Icon iconCommandArgument;
     private Icon iconEditSign;
     private String itemActionCommand;
     private String itemActionCommandArgRegex;
-    public Map<String, Icon> otherIcon = new HashMap<>();
+    public final Map<String, Icon> otherIcon = new HashMap<>();
     protected String title;
     public char[] inventory;
     public GuiSignEditConfig(BillboardsPlugin plugin) {
@@ -138,8 +138,8 @@ public class GuiSignEditConfig {
     }
 
     public class Gui implements IGui {
-        Player player;
-        BillboardSign billboard;
+        private final Player player;
+        private final BillboardSign billboard;
 
         public Gui(Player player, BillboardSign billboard) {
             this.player = player;

@@ -125,8 +125,7 @@ public class SignEditing implements Listener {
 
 	// returns null if the player was editing
 	public SignEdit endSignEdit(Player player) {
-		SignEdit sign = editing.remove(player.getName());
-		return sign;
+        return editing.remove(player.getName());
 	}
 
 	@EventHandler

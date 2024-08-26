@@ -2,7 +2,6 @@ package de.blablubbabc.billboards;
 
 import de.blablubbabc.billboards.entry.BillboardSign;
 import de.blablubbabc.billboards.message.Message;
-import de.blablubbabc.billboards.message.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -12,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import de.blablubbabc.billboards.util.SoftBlockLocation;
 import de.blablubbabc.billboards.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
 public class BillboardCommands implements CommandExecutor {
 
@@ -22,7 +22,7 @@ public class BillboardCommands implements CommandExecutor {
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		if (!(sender instanceof Player)) {
 			sender.sendMessage(Message.ONLY_AS_PLAYER.get());
 			return true;
@@ -47,7 +47,7 @@ public class BillboardCommands implements CommandExecutor {
 
 		// get targeted sign:
 		Block targetBlock = player.getTargetBlock(null, 10);
-		if (!Utils.isSign(targetBlock.getType())) {
+		if (Utils.isNotSign(targetBlock.getType())) {
 			player.sendMessage(Message.NO_TARGETED_SIGN.get());
 			return true;
 		}

@@ -9,13 +9,11 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class ChatPromptListener implements Listener {
-    private Map<String, Function<String, Boolean>> prompts = new HashMap<>();
-    BillboardsPlugin plugin;
+    private final Map<String, Function<String, Boolean>> prompts = new HashMap<>();
+    private final BillboardsPlugin plugin;
     public ChatPromptListener(BillboardsPlugin plugin) {
         this.plugin = plugin;
     }

@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static de.blablubbabc.billboards.util.ColorHelper.t;
 import static de.blablubbabc.billboards.util.Pair.replace;
 
 public class Icon {
@@ -93,7 +94,7 @@ public class Icon {
                 Bukkit.dispatchCommand(player, s.substring(8).trim());
             }
             if (s.startsWith("[message]")) {
-                player.sendMessage(s.substring(9).replace("&", "§"));
+                t(player, s.substring(9).replace("&", "§"));
             }
         }
     }

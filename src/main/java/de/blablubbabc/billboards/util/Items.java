@@ -1,24 +1,14 @@
 package de.blablubbabc.billboards.util;
 
-import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.DoubleChestInventory;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Method;
 import java.util.*;
 
 public class Items {
@@ -43,13 +33,6 @@ public class Items {
 		lore.forEach(s -> newLore.add(ChatColor.translateAlternateColorCodes('&', s)));
 		im.setLore(newLore);
 		item.setItemMeta(im);
-	}
-
-	public static ItemStack buildItem(Material material, String name, List<String> lore) {
-		ItemStack item = new ItemStack(material, 1);
-		setItemDisplayName(item, name);
-		setItemLore(item, lore);
-		return item;
 	}
 
 	public static ItemMeta getItemMeta(Material material) {

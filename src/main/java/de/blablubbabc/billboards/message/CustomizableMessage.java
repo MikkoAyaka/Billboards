@@ -2,8 +2,8 @@ package de.blablubbabc.billboards.message;
 
 public class CustomizableMessage {
 
-	Message id;
-	String text;
+	final Message id;
+	final String text;
 	String notes;
 
 	CustomizableMessage(Message id, String text, String notes) {

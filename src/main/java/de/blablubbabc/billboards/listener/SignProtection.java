@@ -3,7 +3,6 @@ package de.blablubbabc.billboards.listener;
 import de.blablubbabc.billboards.BillboardsPlugin;
 import de.blablubbabc.billboards.entry.BillboardSign;
 import de.blablubbabc.billboards.message.Message;
-import de.blablubbabc.billboards.message.Messages;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

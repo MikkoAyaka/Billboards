@@ -62,9 +62,9 @@ public class Utils {
 		return (string == null || string.isEmpty());
 	}
 
-	public static boolean isSign(Material material) {
-		if (material == null) return false;
-		return material.data.isAssignableFrom(org.bukkit.block.data.type.Sign.class) || material.data.isAssignableFrom(org.bukkit.block.data.type.WallSign.class);
+	public static boolean isNotSign(Material material) {
+		if (material == null) return true;
+		return !material.data.isAssignableFrom(org.bukkit.block.data.type.Sign.class) && !material.data.isAssignableFrom(org.bukkit.block.data.type.WallSign.class);
 	}
 
 	public static Integer parseInteger(String string) {

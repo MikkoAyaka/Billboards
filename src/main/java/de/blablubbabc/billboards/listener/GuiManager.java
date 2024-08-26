@@ -10,8 +10,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.jetbrains.annotations.Nullable;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,11 +39,6 @@ public class GuiManager implements Listener{
 			player.closeInventory();
 		}
 		playersGui.clear();
-	}
-
-	@Nullable
-	public IGui getOpeningGui(Player player) {
-		return playersGui.get(player.getUniqueId());
 	}
 
 	@EventHandler

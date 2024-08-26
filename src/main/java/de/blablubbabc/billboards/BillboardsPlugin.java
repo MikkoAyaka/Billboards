@@ -223,13 +223,13 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	}
 
 	public void refreshAllSigns() {
-		List<BillboardSign> forRemoval = new ArrayList<BillboardSign>();
+		List<BillboardSign> forRemoval = new ArrayList<>();
 		for (BillboardSign billboard : billboardsView) {
 			Location location = billboard.getLocation().getBukkitLocation();
 			if (location == null) {
 				// TODO really remove? what if the world is only temporarily unloaded?
 				// TODO add a cleanup command instead?
-				this.getLogger().warning("World '" + billboard.getLocation().getWorldName() + "' not found. Removing this billboard sign.");
+				this.getLogger().warning("World '" + billboard.getLocation().worldName + "' not found. Removing this billboard sign.");
 				forRemoval.add(billboard);
 				continue;
 			}
@@ -270,7 +270,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 
 		Location location = billboard.getLocation().getBukkitLocation();
 		if (location == null) {
-			this.getLogger().warning("World '" + billboard.getLocation().getWorldName() + "' not found. Removing this billboard sign.");
+			this.getLogger().warning("World '" + billboard.getLocation().worldName + "' not found. Removing this billboard sign.");
 			this.removeBillboard(billboard);
 			this.saveBillboards();
 			return false;
@@ -278,7 +278,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 
 		Block block = location.getBlock();
 		Material type = block.getType();
-		if (!Utils.isSign(type)) {
+		if (Utils.isNotSign(type)) {
 			this.getLogger().warning("Billboard '" + billboard.getLocation().toString() + "' is no longer a sign. Removing this billboard sign.");
 			this.removeBillboard(billboard);
 			this.saveBillboards();
