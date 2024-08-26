@@ -1,0 +1,58 @@
+title: 'Edit Billboards'
+inventory:
+  - 'OOOOOOOOO'
+  - 'OCE     O'
+  - 'OOOOOOOOO'
+# Main icons
+# KEY IS NOT ALLOW TO BE MODIFY
+items:
+  C:
+    material: ARROW
+    display: '&e&lEdit click Action'
+    lore:
+      - ''
+      - '&f  Edit the residence to teleport  '
+      - '&f  when someone click the sign.  '
+      - '&f  Current: &e%arg%'
+      - ''
+    action:
+      command: 'player:res tp %s'
+      command-arg-regex: '^[A-Za-z0-9\\u4e00-\\u9fa5\\-_.]+'
+  E:
+    material: OAK_SIGN
+    display: '&e&lEdit Sign Content'
+    lore:
+      - ''
+      - '&f  Edit the text on the sign.  '
+      - ''
+other-items:
+  O:
+    material: BLACK_STAINED_GLASS_PANE
+    custom-model: 10000
+    display: '&0'
+  F:
+    material: STONE
+    # Optional, display an enchanted effect
+    glow: true
+    # Optional, CustomModelData value
+    custom-model: 10000
+    # Optional, display name
+    display: 'Example Icon'
+    # Optional
+    lore:
+      - 'It is a full example.'
+      - 'We will show you all features you can use here.'
+    # Optional, do sth actions when player click icon.
+    # standard format is [type]arguments. There are some types.
+    # [console] execute console command
+    # [player] execute player command
+    # [message] show a message in chat screen
+    # PlaceholderAPI support for all actions.
+    left-click-commands: []
+    right-click-commands: []
+    shift-left-click-commands: []
+    shift-right-click-commands: []
+    drop-commands:
+      - '[console]dm open cd_main %player_name%'
+      - '[player]spawn'
+      - '[message]Ciallo～(∠・ω< )⌒★'

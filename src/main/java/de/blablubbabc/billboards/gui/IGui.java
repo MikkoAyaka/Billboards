@@ -13,7 +13,7 @@ public interface IGui {
 	void onClick(InventoryAction action, ClickType click, InventoryType.SlotType slotType, int slot, ItemStack currentItem, ItemStack cursor, InventoryView view, InventoryClickEvent event);
 	void onDrag(InventoryView view, InventoryDragEvent event);
 	void onClose(InventoryView view);
-	default void refresh(){
+	default void open(){
 		BillboardsPlugin.getInstance().getGuiManager().openGui(this);
 	}
 }

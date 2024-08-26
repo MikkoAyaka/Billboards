@@ -8,9 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import de.blablubbabc.billboards.BillboardsPlugin;
 import de.blablubbabc.billboards.entry.BillboardSign;
-import de.blablubbabc.billboards.gui.GuiSignEdit;
 import de.blablubbabc.billboards.message.Message;
-import de.blablubbabc.billboards.message.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
@@ -167,7 +165,7 @@ public class SignInteraction implements Listener {
 				// is owner -> edit
 				if (billboard.canEdit(player)) {
 					if (player.isSneaking()) {
-						plugin.getGuiManager().openGui(new GuiSignEdit(plugin, player, billboard));
+						plugin.signEditGuiConfig.gui(player, billboard).open();
 					} else {
 						printBillboard(player, billboard);
 					}
@@ -175,7 +173,7 @@ public class SignInteraction implements Listener {
 					if (player.isSneaking()) {
 						printBillboard(player, billboard);
 					} else {
-						Utils.runCommand(player, plugin.itemActionCommand, billboard.getCommandArg());
+						plugin.signEditGuiConfig.executeClickCommand(player, billboard.getCommandArg());
 					}
 				} else {
 					printBillboard(player, billboard);

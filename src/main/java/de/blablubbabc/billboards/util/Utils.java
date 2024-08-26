@@ -1,15 +1,26 @@
 package de.blablubbabc.billboards.util;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.google.common.collect.Lists;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class Utils {
 	private static Boolean hasPAPI = null;
+	public static void init() {
+		try {
+			Class.forName("me.clip.placeholderapi.PlaceholderAPI");
+			hasPAPI = true;
+		} catch (ClassNotFoundException e) {
+			hasPAPI = false;
+		}
+	}
 	public static void runCommand(Player player, String command, Object... args) {
 		if (command.startsWith("player:")) {
 			String s = String.format(command.substring(7), args);
@@ -20,14 +31,19 @@ public class Utils {
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papi(player, s));
 		}
 	}
+	public static String papi(OfflinePlayer p, String s) {
+		String name = p.getName();
+		if (!hasPAPI) return s.replace("%player_name%", name == null ? "" : name);
+		return PlaceholderAPI.setPlaceholders(p, s);
+	}
 	public static String papi(Player p, String s) {
-		if (hasPAPI == null) try {
-			Class.forName("me.clip.placeholderapi.PlaceholderAPI");
-			hasPAPI = true;
-		} catch (ClassNotFoundException e) {
-			hasPAPI = false;
-		}
-		if (!hasPAPI) return s;
+		if (!hasPAPI) return s.replace("%player_name%", p.getName());
+		return PlaceholderAPI.setPlaceholders(p, s);
+	}
+
+	public static List<String> papi(OfflinePlayer p, List<String> s) {
+		String name = p.getName();
+		if (!hasPAPI) return Lists.newArrayList(String.join("\n", s).replace("%player_name%", name == null ? "" : name).split("\n"));
 		return PlaceholderAPI.setPlaceholders(p, s);
 	}
 

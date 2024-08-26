@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import com.google.common.collect.Lists;
 import de.blablubbabc.billboards.entry.BillboardSign;
+import de.blablubbabc.billboards.gui.GuiSignEditConfig;
 import de.blablubbabc.billboards.listener.*;
 import de.blablubbabc.billboards.message.Message;
 import de.blablubbabc.billboards.message.Messages;
@@ -27,6 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -67,17 +68,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	public int defaultPrice = 10;
 	public int defaultDurationInDays = 7;
 	public int maxBillboardsPerPlayer = -1; // no limit by default
-	public String editSignTitle;
-	public Material itemActionMaterial;
-	public int itemActionSlot;
-	public String itemActionName;
-	public List<String> itemActionLore;
-	public String itemActionCommand;
-	public String itemActionCommandArgRegex;
-	public Material itemEditSignMaterial;
-	public int itemEditSignSlot;
-	public String itemEditSignName;
-	public List<String> itemEditSignLore;
+	public final GuiSignEditConfig signEditGuiConfig = new GuiSignEditConfig(this);
 	// data:
 	private final Map<SoftBlockLocation, BillboardSign> billboards = new LinkedHashMap<>();
 	private final Collection<BillboardSign> billboardsView = Collections.unmodifiableCollection(billboards.values());
@@ -96,6 +87,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		if (!Bukkit.getOnlinePlayers().isEmpty() && !setupEconomy()) {
 			return;
 		}
+		Utils.init();
 
 		// load messages:
 		this.reloadMessages();
@@ -115,8 +107,11 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		chatPromptListener.onPluginEnable();
 
 		// register command handler:
-		BillboardCommands commands = new BillboardCommands(this);
-		this.getCommand("billboard").setExecutor(commands);
+		PluginCommand command = this.getCommand("billboard");
+		if (command != null) {
+			BillboardCommands commands = new BillboardCommands(this);
+			command.setExecutor(commands);
+		}
 
 		// start refresh timer:
 		Bukkit.getScheduler().runTaskTimer(this, this::refreshAllSigns, 5L, 20L * 60 * 10);
@@ -152,34 +147,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		defaultDurationInDays = config.getInt("default-duration-in-days", 7);
 		maxBillboardsPerPlayer = config.getInt("max-billboards-per-player", -1);
 
-		editSignTitle = config.getString("edit-sign-title", "Edit Billboard");
-		itemActionMaterial = Utils.parseMat(config.getString("items.action.material")).orElse(Material.ARROW);
-		itemActionSlot = config.getInt("items.action.slot", 0);
-		itemActionName = config.getString("items.action.name", "&e&lEdit Click Action");
-		if (!config.contains("items.action.lore")) {
-			itemActionLore = Lists.newArrayList(
-					"",
-					"&f  Edit the residence to teleport  ",
-					"&f  when someone click the sign.  ",
-					""
-			);
-		} else {
-			itemActionLore = config.getStringList("items.action.lore");
-		}
-		itemActionCommand = config.getString("items.action.command", "player:res tp %s");
-		itemActionCommandArgRegex = config.getString("items.action.command-arg-regex", "^[A-Za-z0-9\\u4e00-\\u9fa5\\-_.]+");
-		itemEditSignMaterial = Utils.parseMat(config.getString("items.edit-sign.material")).orElse(Material.OAK_SIGN);
-		itemEditSignSlot = config.getInt("items.edit-sign.slot", 1);
-		itemEditSignName = config.getString("items.edit-sign.name", "&e&lEdit Sign Content");
-		if (!config.contains("items.edit-sign.lore")) {
-			itemEditSignLore = Lists.newArrayList(
-					"",
-					"&f  Edit the text on the sign.  ",
-					""
-			);
-		} else {
-			itemEditSignLore = config.getStringList("items.edit-sign.lore");
-		}
+		signEditGuiConfig.reloadConfig();
 
 		// write changes back to config:
 		this.saveConfig();
@@ -192,16 +160,6 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		config.set("default-price", defaultPrice);
 		config.set("default-duration-in-days", defaultDurationInDays);
 		config.set("max-billboards-per-player", maxBillboardsPerPlayer);
-
-		config.set("edit-sign-title", editSignTitle);
-		config.set("items.action.material", itemActionMaterial.name());
-		config.set("items.action.name", itemActionName);
-		config.set("items.action.lore", itemActionLore);
-		config.set("items.action.command", itemActionCommand);
-		config.set("items.action.command-arg-regex", itemActionCommandArgRegex);
-		config.set("items.edit-sign.material", itemEditSignMaterial.name());
-		config.set("items.edit-sign.name", itemEditSignName);
-		config.set("items.edit-sign.lore", itemEditSignLore);
 
 		super.saveConfig();
 	}
@@ -295,7 +253,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 
 		}
 		// remove invalid billboards:
-		if (forRemoval.size() > 0) {
+		if (!forRemoval.isEmpty()) {
 			for (BillboardSign billboard : forRemoval) {
 				this.removeBillboard(billboard);
 			}
@@ -444,7 +402,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		}
 	}
 
-	public boolean saveBillboards() {
+	public void saveBillboards() {
 		YamlConfiguration signsData = new YamlConfiguration();
 		// store signs in signs data config:
 		for (BillboardSign billboard : billboardsView) {
@@ -471,9 +429,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 			writer.write(data);
 		} catch (Exception e) {
 			this.getLogger().log(Level.SEVERE, "Failed to save billboards data file!", e);
-			return false;
 		}
-		return true;
 	}
 
 	public GuiManager getGuiManager() {
