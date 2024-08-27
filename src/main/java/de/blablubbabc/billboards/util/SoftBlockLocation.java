@@ -73,4 +73,19 @@ public class SoftBlockLocation {
 		if (z == null) return null;
 		return new SoftBlockLocation(worldName, x, y, z);
 	}
+
+	public static Location getBukkit(String string) {
+		if (string == null) return null;
+		String[] split = string.split(";");
+		if (split.length != 4) return null;
+		String worldName = split[0];
+		if (worldName == null) return null;
+		Double x = Utils.parseDouble(split[1]);
+		if (x == null) return null;
+		Double y = Utils.parseDouble(split[2]);
+		if (y == null) return null;
+		Double z = Utils.parseDouble(split[3]);
+		if (z == null) return null;
+		return new Location(Bukkit.getWorld(worldName), x, y, z);
+	}
 }

@@ -17,6 +17,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import de.blablubbabc.billboards.entry.BillboardSign;
+import de.blablubbabc.billboards.entry.HologramHolder;
 import de.blablubbabc.billboards.gui.GuiSignEditConfig;
 import de.blablubbabc.billboards.listener.*;
 import de.blablubbabc.billboards.message.Message;
@@ -44,6 +45,16 @@ import de.blablubbabc.billboards.util.SoftBlockLocation;
 import de.blablubbabc.billboards.util.Utils;
 
 import net.milkbowl.vault.economy.Economy;
+import org.holoeasy.HoloEasy;
+import org.holoeasy.hologram.Hologram;
+import org.holoeasy.line.ClickableTextLine;
+import org.holoeasy.line.ILine;
+import org.holoeasy.line.ITextLine;
+import org.holoeasy.line.TextLine;
+import org.holoeasy.pool.IHologramPool;
+
+import static org.holoeasy.builder.HologramBuilder.clickable;
+import static org.holoeasy.builder.HologramBuilder.hologram;
 
 public class BillboardsPlugin extends JavaPlugin implements Listener {
 
@@ -80,6 +91,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	public final ChatPromptListener chatPromptListener = new ChatPromptListener(this);
 
 	private GuiManager guiManager = null;
+	private IHologramPool hologramPool;
 
 	@Override
 	public void onEnable() {
@@ -88,6 +100,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 			return;
 		}
 		Utils.init();
+		hologramPool = HoloEasy.startInteractivePool(this, 60, 0.5f, 5f);
 
 		// load messages:
 		this.reloadMessages();
@@ -189,13 +202,21 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 
 	public void addBillboard(BillboardSign billboard) {
 		Validate.isTrue(!billboard.isValid(), "Billboard was already added!");
-		billboards.put(billboard.getLocation(), billboard);
+		if (billboard.getHologram() == null) {
+			billboards.put(billboard.getLocation(), billboard);
+		} else {
+			// TODO: 添加到悬浮字广告牌列表
+		}
 		billboard.setValid(true);
 	}
 
 	public void removeBillboard(BillboardSign billboard) {
 		Validate.isTrue(billboard.isValid(), "Billboard is not valid!");
-		billboards.remove(billboard.getLocation());
+		if (billboard.getHologram() == null) {
+			billboards.remove(billboard.getLocation());
+		} else {
+			// TODO: 从悬浮字广告牌列表移除
+		}
 		billboard.setValid(false);
 	}
 
@@ -225,6 +246,11 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	public void refreshAllSigns() {
 		List<BillboardSign> forRemoval = new ArrayList<>();
 		for (BillboardSign billboard : billboardsView) {
+			HologramHolder hologram = billboard.getHologram();
+			if (hologram != null) {
+				// TODO: 更新悬浮字
+				continue;
+			}
 			Location location = billboard.getLocation().getBukkitLocation();
 			if (location == null) {
 				// TODO really remove? what if the world is only temporarily unloaded?
@@ -369,10 +395,30 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 				continue;
 			}
 
-			SoftBlockLocation signLocation = SoftBlockLocation.getFromString(node);
-			if (signLocation == null) {
-				this.getLogger().warning("Couldn't load sign (invalid location): " + node);
-				continue;
+			HologramHolder hologram;
+			SoftBlockLocation signLocation = null;
+			if (node.startsWith("hologram-")) {
+				Location loc = SoftBlockLocation.getBukkit(node.substring(9));
+				if (loc == null) {
+					this.getLogger().warning("Couldn't load hologram (invalid location): " + node);
+					continue;
+				}
+				List<String> lines = signSection.getStringList("hologram");
+				hologram = new HologramHolder(node);
+				hologramPool.registerHolograms(() -> {
+					hologram.hologram = hologram(loc, () -> {
+						for (String line : lines) {
+							clickable(line).onClick(player -> HologramInteraction.clickHologram(player, hologram));
+						}
+					});
+				});
+			} else {
+				hologram = null;
+				signLocation = SoftBlockLocation.getFromString(node);
+				if (signLocation == null) {
+					this.getLogger().warning("Couldn't load sign (invalid location): " + node);
+					continue;
+				}
 			}
 
 			String creatorUUIDString = signSection.getString("creator-uuid");
@@ -397,7 +443,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 
 			String commandArg = signSection.getString("command-arg", "");
 
-			BillboardSign billboard = new BillboardSign(signLocation, creatorUUID, creatorName, ownerUUID, ownerName, durationInDays, price, startTime, commandArg);
+			BillboardSign billboard = new BillboardSign(hologram, hologram == null ? signLocation : null, creatorUUID, creatorName, ownerUUID, ownerName, durationInDays, price, startTime, commandArg);
 			this.addBillboard(billboard);
 		}
 	}
@@ -406,7 +452,15 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		YamlConfiguration signsData = new YamlConfiguration();
 		// store signs in signs data config:
 		for (BillboardSign billboard : billboardsView) {
-			String node = billboard.getLocation().toString();
+			String node;
+			HologramHolder hologram = billboard.getHologram();
+			if (hologram != null) {
+				node = hologram.id;
+				List<String> holoLines = hologram.getLines();
+				signsData.set(node + ".hologram", holoLines);
+			} else {
+				node = billboard.getLocation().toString();
+			}
 			signsData.set(node + ".creator-uuid", getUUIDString(billboard.getCreatorUUID()));
 			signsData.set(node + ".creator-last-known-name", billboard.getLastKnownCreatorName());
 			signsData.set(node + ".owner-uuid", getUUIDString(billboard.getOwnerUUID()));

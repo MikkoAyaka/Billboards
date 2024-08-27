@@ -1,6 +1,7 @@
 package de.blablubbabc.billboards;
 
 import de.blablubbabc.billboards.entry.BillboardSign;
+import de.blablubbabc.billboards.entry.HologramHolder;
 import de.blablubbabc.billboards.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -94,8 +95,10 @@ public class BillboardCommands implements CommandExecutor {
 			}
 		}
 
+		HologramHolder hologram = null; // TODO: 创建悬浮字广告牌
+
 		// add and setup billboard sign:
-		BillboardSign billboard = new BillboardSign(blockLocation, creator, duration, price);
+		BillboardSign billboard = new BillboardSign(hologram, hologram == null ? blockLocation : null, creator, duration, price);
 		plugin.addBillboard(billboard);
 		plugin.refreshSign(billboard);
 		plugin.saveBillboards();

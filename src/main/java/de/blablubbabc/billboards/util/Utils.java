@@ -75,6 +75,14 @@ public class Utils {
 		}
 	}
 
+	public static Double parseDouble(String string) {
+		try {
+			return Double.parseDouble(string);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
 	public static UUID parseUUID(String string) {
 		if (string == null) return null;
 		try {

@@ -27,9 +27,13 @@ dependencies {
 tasks {
     shadowJar {
         archiveClassifier.set("")
-        relocate("org.intellij.lang.annotations", "de.blablubbabc.billboards.util.annotations.intellij")
-        relocate("org.jetbrains.annotations", "de.blablubbabc.billboards.util.annotations.jetbrains")
-        relocate("org.holoeasy", "de.blablubbabc.billboards.util.holoeasy")
+        mapOf(
+            "org.intellij.lang.annotations" to "annotations.intellij",
+            "org.jetbrains.annotations" to "annotations.jetbrains",
+            "org.holoeasy" to "holoeasy",
+        ).forEach { (original, target) ->
+            relocate(original, "de.blablubbabc.billboards.util.$target")
+        }
     }
     build {
         dependsOn(shadowJar)

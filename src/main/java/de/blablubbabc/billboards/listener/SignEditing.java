@@ -9,11 +9,17 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import de.blablubbabc.billboards.BillboardsPlugin;
 import de.blablubbabc.billboards.entry.BillboardSign;
+import de.blablubbabc.billboards.entry.HologramHolder;
 import de.blablubbabc.billboards.entry.SignEdit;
+import de.blablubbabc.billboards.util.SoftBlockLocation;
+import de.blablubbabc.billboards.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,13 +56,16 @@ public class SignEditing implements Listener {
 					// still owner and has still the permission?
 					if (signEdit.billboard.canEdit(player) && player.hasPermission(BillboardsPlugin.RENT_PERMISSION)) {
 						// update billboard sign content:
-						Bukkit.getScheduler().runTask(plugin, () -> {
-							Sign target = (Sign) signEdit.billboard.getLocation().getBukkitLocation().getBlock().getState();
+						SoftBlockLocation signLoc = signEdit.billboard.getLocation();
+						if (signLoc != null) Bukkit.getScheduler().runTask(plugin, () -> {
+							Sign target = (Sign) signLoc.getBukkitLocation().getBlock().getState();
 							for (int i = 0; i < lines.length && i < 4; i++) {
 								target.setLine(i, lines[i]);
 							}
 							target.update();
 						});
+						HologramHolder hologram = signEdit.billboard.getHologram();
+						// TODO: 更新悬浮字内容
 					}
 					else player.sendMessage("§7你无法编辑这个广告牌");
 				}
@@ -98,18 +107,35 @@ public class SignEditing implements Listener {
 		}
 		return lines;
 	}
+	public static Material getSignMaterial() {
+		return Utils.parseMat("OAK_SIGN")
+				.orElseGet(() -> Utils.parseMat("SIGN_POST").orElse(null));
+	}
 	public void openSignEdit(Player player, BillboardSign billboard) {
 		if (!player.isOnline() || editing.containsKey(player.getName())) {
 			return;
 		}
-		Location location = player.getLocation();
+		Location location = player.getLocation().clone();
 		location.setY(location.getBlockY() - 4);
 
-		Block block = billboard.getLocation().getBukkitLocation().getBlock();
+		HologramHolder hologram = billboard.getHologram();
+
+		BlockData fakeSign;
+		String[] content = new String[4];
+		if (hologram != null) {
+			fakeSign = getSignMaterial().createBlockData();
+			// TODO: 打开悬浮字编辑
+		} else {
+			Block block = billboard.getLocation().getBukkitLocation().getBlock();
+			BlockState state = block.getState();
+			if (!(state instanceof Sign)) return;
+			fakeSign = block.getBlockData();
+			content = decodeColor(((Sign) state).getLines());
+		}
 
 		// create a fake sign
-		player.sendBlockChange(location, block.getBlockData());
-		player.sendSignChange(location, decodeColor(((Sign) block.getState()).getLines()));
+		player.sendBlockChange(location, fakeSign);
+		player.sendSignChange(location, content);
 
 		// open sign edit gui for player
 		PacketContainer openSign = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.OPEN_SIGN_EDITOR);
