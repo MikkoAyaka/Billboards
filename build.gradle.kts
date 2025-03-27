@@ -9,17 +9,19 @@ version = "2.3.3"
 repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/groups/public/")
+    maven("https://repo.codemc.io/repository/maven-public/")
     maven("https://jitpack.io")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
-    maven("https://repo.dmulloy2.net/repository/public/")
+    maven("https://repo.rosewooddev.io/repository/public/")
+    maven("https://repo.dmulloy2.net/repository/releases/")
     maven("https://oss.sonatype.org/content/groups/public/")
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
-    compileOnly("me.clip:placeholderapi:2.11.2")
-    compileOnly("com.comphenix.protocol:ProtocolLib:4.5.1")
+    compileOnly("org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT")
+    compileOnly("net.milkbowl.vault:VaultAPI:1.7")
+    compileOnly("me.clip:placeholderapi:2.11.6")
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
 
     implementation("org.jetbrains:annotations:24.0.1")
     implementation("com.github.MrXiaoM:holoeasy:3.4.3-1")
