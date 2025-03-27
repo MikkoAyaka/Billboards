@@ -10,10 +10,10 @@ import org.bukkit.entity.Player;
 
 import de.blablubbabc.billboards.util.SoftBlockLocation;
 import de.blablubbabc.billboards.util.Utils;
-import org.holoeasy.hologram.Hologram;
+import org.jetbrains.annotations.Nullable;
 
 public class BillboardSign {
-	private final HologramHolder hologram;
+	private final @Nullable HologramHolder hologram;
 	private final SoftBlockLocation location;
 	private final UUID creatorUUID; // null if created by the server (by an admin)
 	private String lastKnownCreatorName; // null if unknown or created by the server
@@ -32,8 +32,8 @@ public class BillboardSign {
 	}
 
 	// full: used when loading billboards
-	public BillboardSign(HologramHolder hologram, SoftBlockLocation location, UUID creatorUUID, String lastKnownCreatorName,
-							UUID ownerUUID, String lastKnownOwnerName, int durationInDays, int price, long startTime, String commandArg) {
+	public BillboardSign(@Nullable HologramHolder hologram, SoftBlockLocation location, UUID creatorUUID, String lastKnownCreatorName,
+						 UUID ownerUUID, String lastKnownOwnerName, int durationInDays, int price, long startTime, String commandArg) {
 		if (location == null && hologram == null) throw new IllegalArgumentException("Location and HologramId are null!");
 		this.hologram = hologram;
 		this.location = location;
@@ -62,6 +62,7 @@ public class BillboardSign {
 		this.valid = valid;
 	}
 
+	@Nullable
 	public HologramHolder getHologram() {
 		return hologram;
 	}

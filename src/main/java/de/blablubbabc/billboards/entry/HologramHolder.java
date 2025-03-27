@@ -1,5 +1,6 @@
 package de.blablubbabc.billboards.entry;
 
+import de.blablubbabc.billboards.listener.HologramInteraction;
 import org.holoeasy.hologram.Hologram;
 import org.holoeasy.line.ILine;
 import org.holoeasy.line.ITextLine;
@@ -26,5 +27,20 @@ public class HologramHolder {
             }
         }
         return holoLines;
+    }
+
+    public void setLines(List<String> linesStr) {
+        Hologram holo = hologram;
+        List<ILine<?>> lines = new ArrayList<>();
+        for (String s : linesStr) {
+            lines.add(createLine(this, s));
+        }
+        holo.load(lines.toArray(new ILine[0]));
+    }
+
+    public static ILine<?> createLine(HologramHolder holo, String text, Object... args) {
+        TextLine textLine = new TextLine(holo.hologram.getPlugin(), text, args, true);
+        textLine.setClickEvent(player -> HologramInteraction.clickHologram(player, holo));
+        return textLine;
     }
 }

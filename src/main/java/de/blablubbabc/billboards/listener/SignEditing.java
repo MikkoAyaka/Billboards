@@ -8,6 +8,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.BlockPosition;
+import com.google.common.collect.Lists;
 import de.blablubbabc.billboards.BillboardsPlugin;
 import de.blablubbabc.billboards.entry.BillboardSign;
 import de.blablubbabc.billboards.entry.HologramHolder;
@@ -28,6 +29,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SignEditing implements Listener {
@@ -60,15 +62,17 @@ public class SignEditing implements Listener {
 					if (signEdit.billboard.canEdit(player) && player.hasPermission(BillboardsPlugin.RENT_PERMISSION)) {
 						// update billboard sign content:
 						SoftBlockLocation signLoc = signEdit.billboard.getLocation();
-						if (signLoc != null) Bukkit.getScheduler().runTask(plugin, () -> {
+						HologramHolder hologram = signEdit.billboard.getHologram();
+						if (hologram != null) Bukkit.getScheduler().runTask(plugin, () -> { // 更新悬浮字
+							List<String> list = Lists.newArrayList(lines);
+							hologram.setLines(list);
+						}); else if (signLoc != null) Bukkit.getScheduler().runTask(plugin, () -> { // 更新木牌
 							Sign target = (Sign) signLoc.getBukkitLocation().getBlock().getState();
 							for (int i = 0; i < lines.length && i < 4; i++) {
 								target.setLine(i, lines[i]);
 							}
 							target.update();
 						});
-						HologramHolder hologram = signEdit.billboard.getHologram();
-						// TODO: 更新悬浮字内容
 					}
 					else player.sendMessage("§7你无法编辑这个广告牌");
 				}

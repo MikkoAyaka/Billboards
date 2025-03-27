@@ -46,15 +46,9 @@ import de.blablubbabc.billboards.util.Utils;
 
 import net.milkbowl.vault.economy.Economy;
 import org.holoeasy.HoloEasy;
-import org.holoeasy.hologram.Hologram;
-import org.holoeasy.line.ClickableTextLine;
-import org.holoeasy.line.ILine;
-import org.holoeasy.line.ITextLine;
-import org.holoeasy.line.TextLine;
 import org.holoeasy.pool.IHologramPool;
 
-import static org.holoeasy.builder.HologramBuilder.clickable;
-import static org.holoeasy.builder.HologramBuilder.hologram;
+import static org.holoeasy.builder.HologramBuilder.*;
 
 public class BillboardsPlugin extends JavaPlugin implements Listener {
 
@@ -406,11 +400,8 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 				List<String> lines = signSection.getStringList("hologram");
 				hologram = new HologramHolder(node);
 				hologramPool.registerHolograms(() -> {
-					hologram.hologram = hologram(loc, () -> {
-						for (String line : lines) {
-							clickable(line).onClick(player -> HologramInteraction.clickHologram(player, hologram));
-						}
-					});
+					hologram.hologram = hologram(loc, () -> {});
+					hologram.setLines(lines);
 				});
 			} else {
 				hologram = null;
