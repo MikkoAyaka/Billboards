@@ -119,6 +119,13 @@ public class SignEditing implements Listener {
 		}
 		return lines;
 	}
+	public String[] decodeColor(List<String> lines) {
+		String[] array = new String[lines.size()];
+		for (int i = 0; i < lines.size(); i++) {
+			array[i] = lines.get(i).replace("§", "&");
+		}
+		return array;
+	}
 	public static Material getSignMaterial() {
 		return Utils.parseMat("OAK_SIGN")
 				.orElseGet(() -> Utils.parseMat("SIGN_POST").orElse(null));
@@ -138,10 +145,10 @@ public class SignEditing implements Listener {
 		HologramHolder hologram = billboard.getHologram();
 
 		BlockData fakeSign;
-		String[] content = new String[4];
+		String[] content;
 		if (hologram != null) {
 			fakeSign = getSignMaterial().createBlockData();
-			// TODO: 打开悬浮字编辑
+			content = decodeColor(hologram.getLines());
 		} else {
 			Block block = billboard.getLocation().getBukkitLocation().getBlock();
 			BlockState state = block.getState();
