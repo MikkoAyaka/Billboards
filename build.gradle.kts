@@ -24,6 +24,7 @@ dependencies {
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
 
     implementation("org.jetbrains:annotations:24.0.1")
+    implementation("commons-lang:commons-lang:2.6")
     implementation("com.github.MrXiaoM:holoeasy:3.4.3-1")
 }
 tasks {
@@ -32,6 +33,7 @@ tasks {
         mapOf(
             "org.intellij.lang.annotations" to "annotations.intellij",
             "org.jetbrains.annotations" to "annotations.jetbrains",
+            "org.apache.commons" to "commons",
             "org.holoeasy" to "holoeasy",
         ).forEach { (original, target) ->
             relocate(original, "de.blablubbabc.billboards.util.$target")
