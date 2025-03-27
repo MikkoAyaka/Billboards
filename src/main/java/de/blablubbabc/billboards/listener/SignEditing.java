@@ -6,6 +6,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import de.blablubbabc.billboards.BillboardsPlugin;
 import de.blablubbabc.billboards.entry.BillboardSign;
@@ -35,6 +36,7 @@ public class SignEditing implements Listener {
 	// player name -> editing information
 	private final Map<String, SignEdit> editing = new HashMap<>();
 	private ProtocolManager protocolManager;
+	private int bedrock;
 	public SignEditing(BillboardsPlugin plugin) {
 		this.plugin = plugin;
 	}
@@ -42,6 +44,7 @@ public class SignEditing implements Listener {
 	public void onPluginEnable() {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		protocolManager = ProtocolLibrary.getProtocolManager();
+		bedrock = protocolManager.getMinecraftVersion().isAtLeast(new MinecraftVersion("1.18")) ? -64 : 0;
 		protocolManager.addPacketListener(new PacketAdapter(this.plugin, PacketType.Play.Client.UPDATE_SIGN) {
 			@Override
 			public void onPacketReceiving(PacketEvent event) {
@@ -116,7 +119,12 @@ public class SignEditing implements Listener {
 			return;
 		}
 		Location location = player.getLocation().clone();
-		location.setY(location.getBlockY() - 4);
+		int blockY = location.getBlockY();
+		if (blockY - 4 < bedrock) {
+			location.setY(blockY + 4);
+		} else {
+			location.setY(blockY - 4);
+		}
 
 		HologramHolder hologram = billboard.getHologram();
 
