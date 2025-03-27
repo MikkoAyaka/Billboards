@@ -1,6 +1,5 @@
 package de.blablubbabc.billboards.listener;
 
-import com.comphenix.protocol.events.PacketContainer;
 import de.blablubbabc.billboards.entry.HologramHolder;
 import org.bukkit.entity.Player;
 
