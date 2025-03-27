@@ -1,11 +1,13 @@
 package de.blablubbabc.billboards.listener;
 
 import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLib;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.google.common.collect.Lists;
@@ -27,10 +29,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class SignEditing implements Listener {
 
@@ -39,6 +41,7 @@ public class SignEditing implements Listener {
 	private final Map<String, SignEdit> editing = new HashMap<>();
 	private ProtocolManager protocolManager;
 	private int bedrock;
+	private String verPL, verMC;
 	public SignEditing(BillboardsPlugin plugin) {
 		this.plugin = plugin;
 	}
@@ -47,6 +50,8 @@ public class SignEditing implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		protocolManager = ProtocolLibrary.getProtocolManager();
 		bedrock = protocolManager.getMinecraftVersion().isAtLeast(new MinecraftVersion("1.18")) ? -64 : 0;
+		verPL = ProtocolLib.getPlugin(ProtocolLib.class).getDescription().getVersion();
+		verMC = protocolManager.getMinecraftVersion().getVersion();
 		protocolManager.addPacketListener(new PacketAdapter(this.plugin, PacketType.Play.Client.UPDATE_SIGN) {
 			@Override
 			public void onPacketReceiving(PacketEvent event) {
@@ -149,16 +154,25 @@ public class SignEditing implements Listener {
 		player.sendBlockChange(location, fakeSign);
 		player.sendSignChange(location, content);
 
-		// open sign edit gui for player
-		PacketContainer openSign = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.OPEN_SIGN_EDITOR);
-		BlockPosition position = new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-		openSign.getBlockPositionModifier().write(0, position);
 		try {
+			// open sign edit gui for player
+			PacketContainer openSign = openSignEditor(location);
 			ProtocolLibrary.getProtocolManager().sendServerPacket(player, openSign);
 			editing.put(player.getName(), new SignEdit(billboard, location));
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+		} catch (Throwable t) {
+			plugin.getLogger().log(Level.SEVERE, "为玩家 " + player.getName() + " 打开木牌编辑界面时出现问题 (ProtocolLib " + verPL + ", Minecraft " + verMC + ")", t);
 		}
+	}
+
+	private PacketContainer openSignEditor(Location loc) {
+		PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.OPEN_SIGN_EDITOR);
+		BlockPosition position = new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+		packet.getBlockPositionModifier().write(0, position);
+		StructureModifier<Boolean> booleans = packet.getBooleans();
+		if (booleans.size() > 0) {
+			booleans.write(0, true);
+		}
+		return packet;
 	}
 
 	// returns null if the player was editing
