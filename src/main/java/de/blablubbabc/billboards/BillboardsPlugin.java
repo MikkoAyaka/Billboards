@@ -44,7 +44,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -162,6 +161,8 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 			command.setExecutor(commands);
 		}
 
+		setupEconomy();
+
 		// start refresh timer:
 		getScheduler().runTimer(this::refreshAllSigns, 5L, 20L * 60 * 10);
 	}
@@ -227,11 +228,6 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 			return false;
 		}
 		return true;
-	}
-
-	@EventHandler
-	public void onServerLoaded(ServerLoadEvent event) {
-		setupEconomy();
 	}
 
 	// BILLBOARDS
