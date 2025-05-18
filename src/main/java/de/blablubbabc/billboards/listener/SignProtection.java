@@ -3,6 +3,7 @@ package de.blablubbabc.billboards.listener;
 import de.blablubbabc.billboards.BillboardsPlugin;
 import de.blablubbabc.billboards.entry.BillboardSign;
 import de.blablubbabc.billboards.message.Message;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,10 +49,13 @@ public class SignProtection implements Listener {
 
 		if (breakFailed) {
 			event.setCancelled(true);
-			plugin.getScheduler().runAtLocation(block.getLocation(), (t) -> {
-				// refresh sign to display text:
-				plugin.refreshSign(billboard);
-			});
+			Location location = billboard.getLocation().getBukkitLocation();
+			if (location != null) {
+				plugin.getScheduler().runAtLocation(location, (t) -> {
+					// refresh sign to display text:
+					plugin.refreshSign(billboard);
+				});
+			}
 		} else {
 			// remove billboard:
 			plugin.removeBillboard(billboard);
