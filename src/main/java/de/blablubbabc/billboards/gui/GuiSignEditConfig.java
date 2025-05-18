@@ -166,7 +166,7 @@ public class GuiSignEditConfig {
 
             switch (String.valueOf(c)) {
                 case "C": {
-                    if (!itemActionCommand.isEmpty()) return;
+                    if (itemActionCommand.isEmpty()) return;
                     player.closeInventory();
 
                     player.sendMessage(Message.PROMPT_START.get());
