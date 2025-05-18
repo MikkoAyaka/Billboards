@@ -50,7 +50,7 @@ public class SignInteraction implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	void onInteract(PlayerInteractEvent event) {
+	public void onInteract(PlayerInteractEvent event) {
 		Block clickedBlock = event.getClickedBlock();
 		if (clickedBlock == null || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 		Player player = event.getPlayer();
@@ -204,7 +204,7 @@ public class SignInteraction implements Listener {
 	}
 
 	@EventHandler
-	void onQuit(PlayerQuitEvent event) {
+	public void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		confirmations.remove(player.getName());
 	}

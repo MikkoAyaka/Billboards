@@ -52,9 +52,10 @@ public class SignEditing implements Listener {
 		bedrock = protocolManager.getMinecraftVersion().isAtLeast(new MinecraftVersion("1.18")) ? -64 : 0;
 		verPL = ProtocolLib.getPlugin(ProtocolLib.class).getDescription().getVersion();
 		verMC = protocolManager.getMinecraftVersion().getVersion();
-		protocolManager.addPacketListener(new PacketAdapter(this.plugin, PacketType.Play.Client.UPDATE_SIGN) {
+		protocolManager.addPacketListener(new PacketAdapter(plugin, PacketType.Play.Client.UPDATE_SIGN) {
 			@Override
 			public void onPacketReceiving(PacketEvent event) {
+				BillboardsPlugin plugin = SignEditing.this.plugin;
 				Player player = event.getPlayer();
 				SignEdit signEdit = endSignEdit(player);
 				if (signEdit == null) {
@@ -80,28 +81,35 @@ public class SignEditing implements Listener {
 					return;
 				}
 				String[] lines = encodeColor(input, player);
-				if (SignEditing.this.plugin.refreshSign(signEdit.billboard)) {
+				if (plugin.refreshSign(signEdit.billboard)) {
 					// still owner and has still the permission?
 					if (signEdit.billboard.canEdit(player) && player.hasPermission(BillboardsPlugin.RENT_PERMISSION)) {
 						// update billboard sign content:
 						SoftBlockLocation signLoc = signEdit.billboard.getLocation();
 						HologramHolder hologram = signEdit.billboard.getHologram();
-						if (hologram != null) Bukkit.getScheduler().runTask(plugin, () -> { // 更新悬浮字
-							List<String> list = Lists.newArrayList(lines);
-							hologram.setLines(list);
-						}); else if (signLoc != null) Bukkit.getScheduler().runTask(plugin, () -> { // 更新木牌
-							Sign target = (Sign) signLoc.getBukkitLocation().getBlock().getState();
-							for (int i = 0; i < lines.length && i < 4; i++) {
-								target.setLine(i, lines[i]);
-							}
-							target.update();
-						});
+						if (hologram != null) {
+							plugin.getScheduler().runNextTick((t) -> { // 更新悬浮字
+								List<String> list = Lists.newArrayList(lines);
+								hologram.setLines(list);
+							});
+						} else if (signLoc != null) {
+							Location location = signLoc.getBukkitLocation();
+							plugin.getScheduler().runAtLocation(location, (t) -> { // 更新木牌
+								Sign target = (Sign) location.getBlock().getState();
+								for (int i = 0; i < lines.length && i < 4; i++) {
+									target.setLine(i, lines[i]);
+								}
+								target.update();
+							});
+						}
+					} else {
+						player.sendMessage("§7你无法编辑这个广告牌");
 					}
-					else player.sendMessage("§7你无法编辑这个广告牌");
+				} else {
+					player.sendMessage("§7该广告牌无效");
 				}
-				else player.sendMessage("§7该广告牌无效");
 
-				Bukkit.getScheduler().runTaskLater(plugin, () -> {
+				plugin.getScheduler().runLater((t) -> {
 					if (player.isOnline()) {
 						player.sendBlockChange(signEdit.location, signEdit.location.getBlock().getBlockData());
 					}

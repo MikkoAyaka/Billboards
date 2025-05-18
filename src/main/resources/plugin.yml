@@ -11,6 +11,7 @@ depend:
   - ProtocolLib
 softdepend:
   - PlaceholderAPI
+folia-supported: true
 load: STARTUP
 commands:
   billboard:

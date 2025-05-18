@@ -21,6 +21,8 @@ import java.util.logging.Level;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.injector.StructureCache;
 import com.comphenix.protocol.injector.packet.PacketRegistry;
+import com.tcoded.folialib.FoliaLib;
+import com.tcoded.folialib.impl.PlatformScheduler;
 import de.blablubbabc.billboards.entry.BillboardSign;
 import de.blablubbabc.billboards.entry.HologramHolder;
 import de.blablubbabc.billboards.gui.GuiSignEditConfig;
@@ -91,6 +93,11 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 
 	private GuiManager guiManager = null;
 	private IHologramPool hologramPool;
+	private final FoliaLib foliaLib = new FoliaLib(this);
+
+	public PlatformScheduler getScheduler() {
+		return foliaLib.getScheduler();
+	}
 
 	@SuppressWarnings({"rawtypes"})
 	private void doProtocolLibFix() {
@@ -156,7 +163,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		}
 
 		// start refresh timer:
-		Bukkit.getScheduler().runTaskTimer(this, this::refreshAllSigns, 5L, 20L * 60 * 10);
+		getScheduler().runTimer(this::refreshAllSigns, 5L, 20L * 60 * 10);
 	}
 
 	@Override
@@ -169,7 +176,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 
 		if (guiManager != null) guiManager.onDisable();
 
-		Bukkit.getScheduler().cancelTasks(this);
+		getScheduler().cancelAllTasks();
 		instance = null;
 	}
 
@@ -364,7 +371,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	void onPlayerJoin(PlayerJoinEvent event) {
+	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		this.updateLastKnownName(player.getUniqueId(), player.getName());
 	}

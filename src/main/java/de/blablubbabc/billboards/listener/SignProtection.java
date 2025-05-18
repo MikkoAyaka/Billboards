@@ -28,7 +28,7 @@ public class SignProtection implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-	void onBlockBreak(BlockBreakEvent event) {
+	public void onBlockBreak(BlockBreakEvent event) {
 		// only allow breaking if it has permission and is sneaking
 		Player player = event.getPlayer();
 		Block block = event.getBlock();
@@ -48,7 +48,7 @@ public class SignProtection implements Listener {
 
 		if (breakFailed) {
 			event.setCancelled(true);
-			plugin.getServer().getScheduler().runTask(plugin, () -> {
+			plugin.getScheduler().runAtLocation(block.getLocation(), (t) -> {
 				// refresh sign to display text:
 				plugin.refreshSign(billboard);
 			});
