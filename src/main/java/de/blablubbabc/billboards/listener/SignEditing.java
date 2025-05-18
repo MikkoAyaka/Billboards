@@ -61,7 +61,25 @@ public class SignEditing implements Listener {
 					return; // player wasn't editing
 				}
 				event.setCancelled(true);
-				String[] lines = encodeColor(event.getPacket().getStringArrays().read(0), player);
+
+				String[] input;
+				PacketContainer packet = event.getPacket();
+				StructureModifier<String[]> stringArrays = packet.getStringArrays();
+				StructureModifier<String> strings = packet.getStrings();
+				if (stringArrays.size() > 0) {
+					input = stringArrays.read(0);
+				} else if (strings.size() >= 4) {
+					input = new String[] {
+							strings.read(0),
+							strings.read(1),
+							strings.read(2),
+							strings.read(3)
+					};
+				} else {
+					plugin.getLogger().warning("收到来自玩家 " + player.getName() + " 的无效 UPDATE_SIGN 包，这代表插件可能不支持当前版本");
+					return;
+				}
+				String[] lines = encodeColor(input, player);
 				if (SignEditing.this.plugin.refreshSign(signEdit.billboard)) {
 					// still owner and has still the permission?
 					if (signEdit.billboard.canEdit(player) && player.hasPermission(BillboardsPlugin.RENT_PERMISSION)) {
@@ -190,7 +208,7 @@ public class SignEditing implements Listener {
 	}
 
 	@EventHandler
-	void onQuit(PlayerQuitEvent event) {
+	public void onQuit(PlayerQuitEvent event) {
 		this.endSignEdit(event.getPlayer());
 	}
 }
