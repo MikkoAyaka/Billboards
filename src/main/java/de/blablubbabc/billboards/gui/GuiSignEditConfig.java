@@ -166,7 +166,7 @@ public class GuiSignEditConfig {
 
             switch (String.valueOf(c)) {
                 case "C": {
-                    if (!itemActionCommand.isEmpty()) return;
+                    if (itemActionCommand.isEmpty()) return;
                     player.closeInventory();
 
                     player.sendMessage(Message.PROMPT_START.get());
@@ -187,7 +187,8 @@ public class GuiSignEditConfig {
                     break;
                 }
                 case "E": {
-                    plugin.signEditing.openSignEdit(player, billboard);
+                    player.closeInventory();
+                    Bukkit.getScheduler().runTask(plugin, () -> plugin.signEditing.openSignEdit(player, billboard));
                     break;
                 }
                 default:

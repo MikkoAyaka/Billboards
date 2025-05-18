@@ -10,9 +10,10 @@ import org.bukkit.entity.Player;
 
 import de.blablubbabc.billboards.util.SoftBlockLocation;
 import de.blablubbabc.billboards.util.Utils;
+import org.jetbrains.annotations.Nullable;
 
 public class BillboardSign {
-
+	private final @Nullable HologramHolder hologram;
 	private final SoftBlockLocation location;
 	private final UUID creatorUUID; // null if created by the server (by an admin)
 	private String lastKnownCreatorName; // null if unknown or created by the server
@@ -26,14 +27,15 @@ public class BillboardSign {
 	private boolean valid = false;
 
 	// shortcut: used when creating a new billboard, creator is null if owned by the server
-	public BillboardSign(SoftBlockLocation location, Player creator, int durationInDays, int price) {
-		this(location, (creator != null ? creator.getUniqueId() : null), (creator != null ? creator.getName() : null), null, null, durationInDays, price, 0, "");
+	public BillboardSign(HologramHolder hologram, SoftBlockLocation location, Player creator, int durationInDays, int price) {
+		this(hologram, location, (creator != null ? creator.getUniqueId() : null), (creator != null ? creator.getName() : null), null, null, durationInDays, price, 0, "");
 	}
 
 	// full: used when loading billboards
-	public BillboardSign(	SoftBlockLocation location, UUID creatorUUID, String lastKnownCreatorName,
-							UUID ownerUUID, String lastKnownOwnerName, int durationInDays, int price, long startTime, String commandArg) {
-		Validate.notNull(location, "Location is null!");
+	public BillboardSign(@Nullable HologramHolder hologram, SoftBlockLocation location, UUID creatorUUID, String lastKnownCreatorName,
+						 UUID ownerUUID, String lastKnownOwnerName, int durationInDays, int price, long startTime, String commandArg) {
+		if (location == null && hologram == null) throw new IllegalArgumentException("Location and HologramId are null!");
+		this.hologram = hologram;
 		this.location = location;
 		if (creatorUUID == null) {
 			Validate.isTrue(Utils.isEmpty(lastKnownCreatorName), "Expecting empty creator name if created by the server!");
@@ -58,6 +60,11 @@ public class BillboardSign {
 
 	public void setValid(boolean valid) {
 		this.valid = valid;
+	}
+
+	@Nullable
+	public HologramHolder getHologram() {
+		return hologram;
 	}
 
 	public SoftBlockLocation getLocation() {

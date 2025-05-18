@@ -1,28 +1,38 @@
 package de.blablubbabc.billboards.listener;
 
 import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLib;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.BlockPosition;
+import com.google.common.collect.Lists;
 import de.blablubbabc.billboards.BillboardsPlugin;
 import de.blablubbabc.billboards.entry.BillboardSign;
+import de.blablubbabc.billboards.entry.HologramHolder;
 import de.blablubbabc.billboards.entry.SignEdit;
+import de.blablubbabc.billboards.util.SoftBlockLocation;
+import de.blablubbabc.billboards.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class SignEditing implements Listener {
 
@@ -30,6 +40,8 @@ public class SignEditing implements Listener {
 	// player name -> editing information
 	private final Map<String, SignEdit> editing = new HashMap<>();
 	private ProtocolManager protocolManager;
+	private int bedrock;
+	private String verPL, verMC;
 	public SignEditing(BillboardsPlugin plugin) {
 		this.plugin = plugin;
 	}
@@ -37,6 +49,9 @@ public class SignEditing implements Listener {
 	public void onPluginEnable() {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		protocolManager = ProtocolLibrary.getProtocolManager();
+		bedrock = protocolManager.getMinecraftVersion().isAtLeast(new MinecraftVersion("1.18")) ? -64 : 0;
+		verPL = ProtocolLib.getPlugin(ProtocolLib.class).getDescription().getVersion();
+		verMC = protocolManager.getMinecraftVersion().getVersion();
 		protocolManager.addPacketListener(new PacketAdapter(this.plugin, PacketType.Play.Client.UPDATE_SIGN) {
 			@Override
 			public void onPacketReceiving(PacketEvent event) {
@@ -69,8 +84,13 @@ public class SignEditing implements Listener {
 					// still owner and has still the permission?
 					if (signEdit.billboard.canEdit(player) && player.hasPermission(BillboardsPlugin.RENT_PERMISSION)) {
 						// update billboard sign content:
-						Bukkit.getScheduler().runTask(plugin, () -> {
-							Sign target = (Sign) signEdit.billboard.getLocation().getBukkitLocation().getBlock().getState();
+						SoftBlockLocation signLoc = signEdit.billboard.getLocation();
+						HologramHolder hologram = signEdit.billboard.getHologram();
+						if (hologram != null) Bukkit.getScheduler().runTask(plugin, () -> { // 更新悬浮字
+							List<String> list = Lists.newArrayList(lines);
+							hologram.setLines(list);
+						}); else if (signLoc != null) Bukkit.getScheduler().runTask(plugin, () -> { // 更新木牌
+							Sign target = (Sign) signLoc.getBukkitLocation().getBlock().getState();
 							for (int i = 0; i < lines.length && i < 4; i++) {
 								target.setLine(i, lines[i]);
 							}
@@ -117,28 +137,68 @@ public class SignEditing implements Listener {
 		}
 		return lines;
 	}
+	public String[] decodeColor(List<String> lines) {
+		String[] array = new String[lines.size()];
+		for (int i = 0; i < lines.size(); i++) {
+			array[i] = lines.get(i).replace("§", "&");
+		}
+		return array;
+	}
+	public static Material getSignMaterial() {
+		return Utils.parseMat("OAK_SIGN")
+				.orElseGet(() -> Utils.parseMat("SIGN_POST").orElse(null));
+	}
 	public void openSignEdit(Player player, BillboardSign billboard) {
 		if (!player.isOnline() || editing.containsKey(player.getName())) {
 			return;
 		}
-		Location location = player.getLocation();
-		location.setY(location.getBlockY() - 4);
+		Location location = player.getLocation().clone();
+		int blockY = location.getBlockY();
+		if (blockY - 4 < bedrock) {
+			location.setY(blockY + 4);
+		} else {
+			location.setY(blockY - 4);
+		}
 
-		Block block = billboard.getLocation().getBukkitLocation().getBlock();
+		HologramHolder hologram = billboard.getHologram();
+
+		BlockData fakeSign;
+		String[] content;
+		if (hologram != null) {
+			fakeSign = getSignMaterial().createBlockData();
+			content = decodeColor(hologram.getLines());
+		} else {
+			Block block = billboard.getLocation().getBukkitLocation().getBlock();
+			BlockState state = block.getState();
+			if (!(state instanceof Sign)) return;
+			fakeSign = block.getBlockData();
+			content = decodeColor(((Sign) state).getLines());
+		}
 
 		// create a fake sign
-		player.sendBlockChange(location, block.getBlockData());
-		player.sendSignChange(location, decodeColor(((Sign) block.getState()).getLines()));
+		player.sendBlockChange(location, fakeSign);
+		player.sendSignChange(location, content);
 
-		// open sign edit gui for player
-		PacketContainer openSign = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.OPEN_SIGN_EDITOR);
-		BlockPosition position = new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-		openSign.getBlockPositionModifier().write(0, position);
+		String packetClass = "unknown";
 		try {
+			// open sign edit gui for player
+			PacketType packetType = PacketType.Play.Server.OPEN_SIGN_EDITOR;
+			PacketContainer openSign = new PacketContainer(packetType);
+			packetClass = openSign.getType().name() + " " + openSign.getHandle().getClass().getName();
+			openSignEditor(location, openSign);
 			ProtocolLibrary.getProtocolManager().sendServerPacket(player, openSign);
 			editing.put(player.getName(), new SignEdit(billboard, location));
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Throwable t) {
+			plugin.getLogger().log(Level.SEVERE, "为玩家 " + player.getName() + " 打开木牌编辑界面时出现问题 (ProtocolLib " + verPL + ", Minecraft " + verMC + ", PacketClass=" + packetClass + ") 如果 PacketClass 不是 OpenSignEditor，请考虑升级 ProtocolLib", t);
+		}
+	}
+
+	private void openSignEditor(Location loc, PacketContainer packet) {
+		BlockPosition position = new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+		packet.getBlockPositionModifier().write(0, position); // index out of bounds
+		StructureModifier<Boolean> booleans = packet.getBooleans();
+		if (booleans.size() > 0) { // 1.20.4+ isFrontText
+			booleans.write(0, true);
 		}
 	}
 
@@ -148,7 +208,7 @@ public class SignEditing implements Listener {
 	}
 
 	@EventHandler
-	void onQuit(PlayerQuitEvent event) {
+	public void onQuit(PlayerQuitEvent event) {
 		this.endSignEdit(event.getPlayer());
 	}
 }

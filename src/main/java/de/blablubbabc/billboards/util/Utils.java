@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 public class Utils {
 	private static Boolean hasPAPI = null;
@@ -75,6 +76,14 @@ public class Utils {
 		}
 	}
 
+	public static Double parseDouble(String string) {
+		try {
+			return Double.parseDouble(string);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
 	public static UUID parseUUID(String string) {
 		if (string == null) return null;
 		try {
@@ -93,6 +102,15 @@ public class Utils {
 			} else {
 				return Long.MIN_VALUE;
 			}
+		}
+	}
+
+	@Nullable
+	public static Class<?> getClass(String name) {
+		try {
+			return Class.forName(name);
+		} catch (Throwable t) {
+			return null;
 		}
 	}
 }
