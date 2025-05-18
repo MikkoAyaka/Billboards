@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,6 +18,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.injector.StructureCache;
+import com.comphenix.protocol.injector.packet.PacketRegistry;
 import de.blablubbabc.billboards.entry.BillboardSign;
 import de.blablubbabc.billboards.entry.HologramHolder;
 import de.blablubbabc.billboards.gui.GuiSignEditConfig;
@@ -87,6 +92,34 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 	private GuiManager guiManager = null;
 	private IHologramPool hologramPool;
 
+	@SuppressWarnings({"rawtypes"})
+	private void doProtocolLibFix() {
+		// 给旧版本 ProtocolLib 擦屁股
+		// 从某个版本开始，到 5.3.0+ 之后的某个开发版本解决的漏洞:
+		// ProtocolLib 会将 Player.Server.OPEN_SIGN_EDITOR 给识别成 Status.Server.PONG
+		PacketType packetType = PacketType.Play.Server.OPEN_SIGN_EDITOR;
+		try {
+			if (!StructureCache.newPacket(packetType).getClass().getName().contains("SignEditor")) {
+				// 替换 Play.Server.OPEN_SIGN_EDITOR 对应的 NMS 实现类
+				Method method = PacketRegistry.class.getDeclaredMethod("associate", PacketType.class, Class.class);
+				method.setAccessible(true);
+				Class<?> realClass = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutOpenSignEditor");
+				method.invoke(null, packetType, realClass);
+				// 刷新包结构缓存
+				Field field = StructureCache.class.getDeclaredField("STRUCTURE_MODIFIER_CACHE");
+				field.setAccessible(true);
+				Map map = (Map) field.get(null);
+				map.remove(packetType);
+				StructureCache.getStructure(packetType);
+				// 测试
+				Object testPacket = StructureCache.newPacket(packetType);
+				getLogger().info("已修正 ProtocolLib 包: " + packetType.name() + " = " + testPacket.getClass().getName());
+			}
+		} catch (Throwable t) {
+			getLogger().log(Level.WARNING, "修正 ProtocolLib 的漏洞时出现错误", t);
+		}
+	}
+
 	@Override
 	public void onEnable() {
 		instance = this;
@@ -95,6 +128,8 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		}
 		Utils.init();
 		hologramPool = HoloEasy.startInteractivePool(this, 60, 0.5f, 5f);
+
+		doProtocolLibFix();
 
 		// load messages:
 		this.reloadMessages();

@@ -161,25 +161,27 @@ public class SignEditing implements Listener {
 		player.sendBlockChange(location, fakeSign);
 		player.sendSignChange(location, content);
 
+		String packetClass = "unknown";
 		try {
 			// open sign edit gui for player
-			PacketContainer openSign = openSignEditor(location);
+			PacketType packetType = PacketType.Play.Server.OPEN_SIGN_EDITOR;
+			PacketContainer openSign = new PacketContainer(packetType);
+			packetClass = openSign.getType().name() + " " + openSign.getHandle().getClass().getName();
+			openSignEditor(location, openSign);
 			ProtocolLibrary.getProtocolManager().sendServerPacket(player, openSign);
 			editing.put(player.getName(), new SignEdit(billboard, location));
 		} catch (Throwable t) {
-			plugin.getLogger().log(Level.SEVERE, "为玩家 " + player.getName() + " 打开木牌编辑界面时出现问题 (ProtocolLib " + verPL + ", Minecraft " + verMC + ")", t);
+			plugin.getLogger().log(Level.SEVERE, "为玩家 " + player.getName() + " 打开木牌编辑界面时出现问题 (ProtocolLib " + verPL + ", Minecraft " + verMC + ", PacketClass=" + packetClass + ") 如果 PacketClass 不是 OpenSignEditor，请考虑升级 ProtocolLib", t);
 		}
 	}
 
-	private PacketContainer openSignEditor(Location loc) {
-		PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.OPEN_SIGN_EDITOR);
+	private void openSignEditor(Location loc, PacketContainer packet) {
 		BlockPosition position = new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-		packet.getBlockPositionModifier().write(0, position);
+		packet.getBlockPositionModifier().write(0, position); // index out of bounds
 		StructureModifier<Boolean> booleans = packet.getBooleans();
-		if (booleans.size() > 0) {
+		if (booleans.size() > 0) { // 1.20.4+ isFrontText
 			booleans.write(0, true);
 		}
-		return packet;
 	}
 
 	// returns null if the player was editing
