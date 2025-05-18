@@ -2,9 +2,11 @@ package de.blablubbabc.billboards.util;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class Utils {
 	private static Boolean hasPAPI = null;
+	private static boolean hasBlockData;
 	public static void init() {
 		try {
 			Class.forName("me.clip.placeholderapi.PlaceholderAPI");
@@ -21,7 +24,14 @@ public class Utils {
 		} catch (ClassNotFoundException e) {
 			hasPAPI = false;
 		}
+		hasPAPI = getClass("me.clip.placeholderapi.PlaceholderAPI") != null;
+		hasBlockData = getClass("org.bukkit.block.data.BlockData") != null;
 	}
+
+	public static boolean hasBlockData() {
+		return hasBlockData;
+	}
+
 	public static void runCommand(Player player, String command, Object... args) {
 		if (command.startsWith("player:")) {
 			String s = String.format(command.substring(7), args);
@@ -63,9 +73,13 @@ public class Utils {
 		return (string == null || string.isEmpty());
 	}
 
+	private static final Set<String> legacySigns = Sets.newHashSet("SIGN", "SIGN_POST", "WALL_SIGN");
 	public static boolean isNotSign(Material material) {
 		if (material == null) return true;
-		return !material.data.isAssignableFrom(org.bukkit.block.data.type.Sign.class) && !material.data.isAssignableFrom(org.bukkit.block.data.type.WallSign.class);
+		if (hasBlockData) {
+			return !material.data.isAssignableFrom(org.bukkit.block.data.type.Sign.class) && !material.data.isAssignableFrom(org.bukkit.block.data.type.WallSign.class);
+		}
+		return !legacySigns.contains(material.name().toUpperCase());
 	}
 
 	public static Integer parseInteger(String string) {

@@ -24,7 +24,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,6 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+
+import static de.blablubbabc.billboards.entry.SignEdit.sendBlockChange;
 
 public class SignEditing implements Listener {
 
@@ -112,7 +113,7 @@ public class SignEditing implements Listener {
 
 				plugin.getScheduler().runLater((t) -> {
 					if (player.isOnline()) {
-						player.sendBlockChange(signEdit.location, signEdit.location.getBlock().getBlockData());
+						signEdit.sendBlockChange(player);
 					}
 				}, 2L);
 			}
@@ -171,21 +172,21 @@ public class SignEditing implements Listener {
 
 		HologramHolder hologram = billboard.getHologram();
 
-		BlockData fakeSign;
 		String[] content;
 		if (hologram != null) {
-			fakeSign = getSignMaterial().createBlockData();
 			content = decodeColor(hologram.getLines());
+			// create a fake sign
+			sendBlockChange(player, location, getSignMaterial());
 		} else {
 			Block block = billboard.getLocation().getBukkitLocation().getBlock();
 			BlockState state = block.getState();
 			if (!(state instanceof Sign)) return;
-			fakeSign = block.getBlockData();
 			content = decodeColor(((Sign) state).getLines());
+			// create a fake sign
+			sendBlockChange(player, location, block);
 		}
 
-		// create a fake sign
-		player.sendBlockChange(location, fakeSign);
+		// send fake sign lines
 		player.sendSignChange(location, content);
 
 		String packetClass = "unknown";
