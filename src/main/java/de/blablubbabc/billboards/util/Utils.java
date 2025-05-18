@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 public class Utils {
 	private static Boolean hasPAPI = null;
@@ -101,6 +102,15 @@ public class Utils {
 			} else {
 				return Long.MIN_VALUE;
 			}
+		}
+	}
+
+	@Nullable
+	public static Class<?> getClass(String name) {
+		try {
+			return Class.forName(name);
+		} catch (Throwable t) {
+			return null;
 		}
 	}
 }

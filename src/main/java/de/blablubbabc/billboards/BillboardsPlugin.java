@@ -98,12 +98,12 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 		// 从某个版本开始，到 5.3.0+ 之后的某个开发版本解决的漏洞:
 		// ProtocolLib 会将 Player.Server.OPEN_SIGN_EDITOR 给识别成 Status.Server.PONG
 		PacketType packetType = PacketType.Play.Server.OPEN_SIGN_EDITOR;
-		try {
+		Class<?> realClass = Utils.getClass("net.minecraft.network.protocol.game.PacketPlayOutOpenSignEditor");
+		if (realClass != null) try {
 			if (!StructureCache.newPacket(packetType).getClass().getName().contains("SignEditor")) {
 				// 替换 Play.Server.OPEN_SIGN_EDITOR 对应的 NMS 实现类
 				Method method = PacketRegistry.class.getDeclaredMethod("associate", PacketType.class, Class.class);
 				method.setAccessible(true);
-				Class<?> realClass = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutOpenSignEditor");
 				method.invoke(null, packetType, realClass);
 				// 刷新包结构缓存
 				Field field = StructureCache.class.getDeclaredField("STRUCTURE_MODIFIER_CACHE");
