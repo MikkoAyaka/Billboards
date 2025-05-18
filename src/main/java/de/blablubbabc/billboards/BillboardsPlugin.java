@@ -165,6 +165,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 
 		// start refresh timer:
 		getScheduler().runTimer(this::refreshAllSigns, 5L, 20L * 60 * 10);
+		getLogger().info("Billboards 已启用 - 由 MrXiaoM 重制");
 	}
 
 	@Override
@@ -475,6 +476,7 @@ public class BillboardsPlugin extends JavaPlugin implements Listener {
 			BillboardSign billboard = new BillboardSign(hologram, hologram == null ? signLocation : null, creatorUUID, creatorName, ownerUUID, ownerName, durationInDays, price, startTime, commandArg);
 			this.addBillboard(billboard);
 		}
+		getLogger().info("已加载 " + billboards.size() + " 个广告牌");
 	}
 
 	public void saveBillboards() {
