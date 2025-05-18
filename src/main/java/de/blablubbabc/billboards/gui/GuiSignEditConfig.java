@@ -187,7 +187,8 @@ public class GuiSignEditConfig {
                     break;
                 }
                 case "E": {
-                    plugin.signEditing.openSignEdit(player, billboard);
+                    player.closeInventory();
+                    Bukkit.getScheduler().runTask(plugin, () -> plugin.signEditing.openSignEdit(player, billboard));
                     break;
                 }
                 default:
