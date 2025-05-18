@@ -1,53 +1,55 @@
-title: 'Edit Billboards'
+title: '编辑广告牌'
 inventory:
   - 'OOOOOOOOO'
   - 'OCE     O'
   - 'OOOOOOOOO'
-# Main icons
-# KEY IS NOT ALLOW TO BE MODIFY
+# 主要图标
+# 键名不可更改
 items:
   C:
     material: ARROW
-    display: '&e&lEdit click Action'
+    display: '&e&l编辑点击操作'
     lore:
       - ''
-      - '&f  Edit the residence to teleport  '
-      - '&f  when someone click the sign.  '
-      - '&f  Current: &e%arg%'
+      - '&f  编辑 当玩家点击广告牌时  '
+      - '&f  要传送到的领地.  '
+      - '&f  当前: &e%arg%'
       - ''
     action:
       command: 'player:res tp %s'
       command-arg-regex: '^[A-Za-z0-9\\u4e00-\\u9fa5\\-_.]+'
   E:
     material: OAK_SIGN
-    display: '&e&lEdit Sign Content'
+    display: '&e&l编辑广告牌内容'
     lore:
       - ''
-      - '&f  Edit the text on the sign.  '
+      - '&f  编辑告示牌上的文字.  '
       - ''
+# 次要图标
 other-items:
   O:
     material: BLACK_STAINED_GLASS_PANE
     custom-model: 10000
     display: '&0'
+  # 完整示例
   F:
     material: STONE
-    # Optional, display an enchanted effect
+    # 可选，显示附魔光泽
     glow: true
-    # Optional, CustomModelData value
+    # 可选，设置 CustomModelData 的值
     custom-model: 10000
-    # Optional, display name
+    # 可选，物品展示名
     display: 'Example Icon'
-    # Optional
+    # 可选
     lore:
       - 'It is a full example.'
       - 'We will show you all features you can use here.'
-    # Optional, do sth actions when player click icon.
-    # standard format is [type]arguments. There are some types.
-    # [console] execute console command
-    # [player] execute player command
-    # [message] show a message in chat screen
-    # PlaceholderAPI support for all actions.
+    # 可选，在玩家点击图标时执行的操作
+    # 标准格式是 '[类型]参数'，下面是一些可用的类型
+    # [console] 执行控制台命令
+    # [player] 玩家执行命令
+    # [message] 在聊天栏显示消息
+    # 所有操作均支持 PAPI 变量
     left-click-commands: []
     right-click-commands: []
     shift-left-click-commands: []

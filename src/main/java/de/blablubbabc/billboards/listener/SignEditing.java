@@ -15,6 +15,7 @@ import de.blablubbabc.billboards.BillboardsPlugin;
 import de.blablubbabc.billboards.entry.BillboardSign;
 import de.blablubbabc.billboards.entry.HologramHolder;
 import de.blablubbabc.billboards.entry.SignEdit;
+import de.blablubbabc.billboards.message.Message;
 import de.blablubbabc.billboards.util.SoftBlockLocation;
 import de.blablubbabc.billboards.util.Utils;
 import org.bukkit.Bukkit;
@@ -103,10 +104,10 @@ public class SignEditing implements Listener {
 							});
 						}
 					} else {
-						player.sendMessage("§7你无法编辑这个广告牌");
+						player.sendMessage(Message.NO_PERMISSION.get());
 					}
 				} else {
-					player.sendMessage("§7该广告牌无效");
+					player.sendMessage(Message.INVALID_BILLBOARD.get());
 				}
 
 				plugin.getScheduler().runLater((t) -> {
