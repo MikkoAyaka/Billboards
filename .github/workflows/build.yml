@@ -1,11 +1,11 @@
 name: Development Build
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
     paths-ignore:
       - '*.md'
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
     paths-ignore:
       - '*.md'
   workflow_dispatch:
