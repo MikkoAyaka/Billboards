@@ -5,6 +5,7 @@ version: '${version}'
 authors:
   - blablubbabc
   - MrXiaoM
+  - MikkoAyaka
 description: Rent-able signs.
 depend:
   - Vault

@@ -163,18 +163,10 @@ public class SignInteraction implements Listener {
 				player.sendMessage(Message.CLICK_TO_RENT.get(billboard.getMessageArgs()));
 			} else {
 				// is owner -> edit
-				if (billboard.canEdit(player)) {
-					if (player.isSneaking()) {
-						plugin.signEditGuiConfig.gui(player, billboard).open();
-					} else {
-						printBillboard(player, billboard);
-					}
+				if (billboard.canEdit(player) && player.isSneaking()) {
+					plugin.signEditGuiConfig.gui(player, billboard).open();
 				} else if (!billboard.getCommandArg().isEmpty()) {
-					if (player.isSneaking()) {
-						printBillboard(player, billboard);
-					} else {
-						plugin.signEditGuiConfig.executeClickCommand(player, billboard.getCommandArg());
-					}
+					plugin.signEditGuiConfig.executeClickCommand(player, billboard.getCommandArg());
 				} else {
 					printBillboard(player, billboard);
 				}

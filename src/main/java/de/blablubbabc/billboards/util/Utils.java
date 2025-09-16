@@ -34,12 +34,12 @@ public class Utils {
 
 	public static void runCommand(Player player, String command, Object... args) {
 		if (command.startsWith("player:")) {
-			String s = String.format(command.substring(7), args);
-			Bukkit.dispatchCommand(player, papi(player, s));
+			String s = String.format(papi(player,command.substring(7)), args);
+			Bukkit.dispatchCommand(player, s);
 		}
 		if (command.startsWith("console:")) {
-			String s = String.format(command.substring(8), args);
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), papi(player, s));
+			String s = String.format(papi(player,command.substring(8)), args);
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s);
 		}
 	}
 	public static String papi(OfflinePlayer p, String s) {
