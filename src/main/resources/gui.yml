@@ -17,7 +17,7 @@ items:
       - ''
     action:
       command: 'player:res tp %s'
-      command-arg-regex: '^[A-Za-z0-9\\u4e00-\\u9fa5\\-_.]+'
+      command-arg-regex: '^[A-Za-z0-9\u4e00-\u9fa5\-_.]+'
   E:
     material: OAK_SIGN
     display: '&e&l编辑广告牌内容'
